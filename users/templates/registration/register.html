@@ -1,0 +1,12 @@
+{% extends "rt_chat/base.html" %}
+{% block title %}Register{% endblock title %}
+
+{% block content %}
+<form method="POST" action="{% url 'users:register' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button name="submit" class="btn btn-secondary">Register</button>
+    <input type="hidden" name="next" value="{% url 'users:login' %}" />
+</form>
+{% endblock content %}
