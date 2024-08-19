@@ -1,32 +1,28 @@
 {% extends "rt_chat/base.html" %}
 {% block title %}Home Page{% endblock title %}
 
-{% block content %}
-    <div class="container mt-4">
-        <div class="text-center">
-            <h1 class="display-4">Welcome, {{ request.user|title }}!</h1>
-            <form action="{% url 'users:logout' %}" method="post" class="mt-3">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </div>
+{% block page_header %}
+    <div class="text-center">
+        <h1 class="display-4">Welcome, {{ request.user|title }}!</h1>
+        <form action="{% url 'users:logout' %}" method="post" class="mt-3">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+{% endblock page_header %}
 
-        <div class="row justify-content-center mt-5">
-            <div class="col-lg-6 col-md-8 col-sm-10">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Chat Room</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="id_chat_messages" class="overflow-auto mb-3" style="height: 300px; background-color: #f8f9fa; border-radius: 5px; padding: 10px;">
-                            <!-- Chat messages will appear here -->
-                        </div>
-                        <div class="d-flex">
-                            <input type="text" class="form-control me-2" id="id_message_send_input" placeholder="Type your message..." autofocus />
-                            <button type="submit" class="btn btn-success" id="id_message_send_button">Send</button>
-                        </div>
-                    </div>
-                </div>
+{% block content %}
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Chat Room</h5>
+        </div>
+        <div class="card-body">
+            <div id="id_chat_messages" class="overflow-auto mb-3" style="height: 300px; background-color: #f8f9fa; border-radius: 5px; padding: 10px;">
+                <!-- Chat messages will appear here -->
+            </div>
+            <div class="d-flex">
+                <input type="text" class="form-control me-2" id="id_message_send_input" placeholder="Type your message..." autofocus />
+                <button type="submit" class="btn btn-success" id="id_message_send_button">Send</button>
             </div>
         </div>
     </div>
