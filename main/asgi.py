@@ -15,9 +15,13 @@ from rt_chat import routing
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "main.settings")
 
-application = ProtocolTypeRouter(
-    {
-        "http": get_asgi_application(),
-        "websocket": AuthMiddlewareStack(URLRouter(routing.websocket_urlpatterns)),
-    }
+application = (
+    ProtocolTypeRouter(  # Route incoming connections based on their protocol type
+        {
+            "http": get_asgi_application(),  # Standard HTTP handling
+            "websocket": AuthMiddlewareStack(
+                URLRouter(routing.websocket_urlpatterns)
+            ),  # WebSocket handling with authentication
+        }
+    )
 )

@@ -138,6 +138,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "users:login"
 LOGOUT_REDIRECT_URL = "/"
 
+# Configure django channels to use an in-memory channel layer
+# Not suitable for production, use Redis or a db instead
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",

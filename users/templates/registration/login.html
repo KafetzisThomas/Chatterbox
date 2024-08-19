@@ -7,6 +7,6 @@
     {{ form.as_p }}
 
     <button name="submit" class="btn btn-secondary">Log in</button>
-    <input type="hidden" name="next" value="{% url 'chat' %}" />
+    <input type="hidden" name="next" value="{% url 'rt_chat:chat' %}" />
 </form>
 {% endblock content %}
