@@ -17,12 +17,12 @@
             <h5 class="mb-0">Chat Room</h5>
         </div>
         <div class="card-body">
-            <div id="id_chat_messages" class="overflow-auto mb-3" style="height: 300px; background-color: #f8f9fa; border-radius: 5px; padding: 10px;">
+            <div id="chat_messages" class="overflow-auto bg-light rounded p-3 mb-3" style="height: 300px;">
                 <!-- Chat messages will appear here -->
             </div>
             <div class="d-flex">
-                <input type="text" class="form-control me-2" id="id_message_send_input" placeholder="Type your message..." autofocus />
-                <button type="submit" class="btn btn-success" id="id_message_send_button">Send</button>
+                <input type="text" class="form-control me-2" id="message_send_input" placeholder="Type your message..." autofocus />
+                <button type="submit" class="btn btn-success" id="message_send_button">Send</button>
             </div>
         </div>
     </div>
@@ -38,20 +38,20 @@
             console.log("Something unexpected happened!");
         };
 
-        document.querySelector("#id_message_send_input").focus();
+        document.querySelector("#message_send_input").focus();
 
-        document.querySelector("#id_message_send_input").onkeyup = function (e) {
+        document.querySelector("#message_send_input").onkeyup = function (e) {
             if (e.keyCode === 13) {
-                document.querySelector("#id_message_send_button").click();
+                document.querySelector("#message_send_button").click();
             }
         };
 
-        document.querySelector("#id_message_send_button").onclick = function (e) {
-            const messageInput = document.querySelector("#id_message_send_input").value.trim();
+        document.querySelector("#message_send_button").onclick = function (e) {
+            const messageInput = document.querySelector("#message_send_input").value.trim();
             if (messageInput) {
                 chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ request.user.username }}" }));
             }
-            document.querySelector("#id_message_send_input").value = "";
+            document.querySelector("#message_send_input").value = "";
         };
 
         chatSocket.onmessage = function (e) {
@@ -59,8 +59,8 @@
             const div = document.createElement("div");
             div.classList.add("alert", "alert-secondary", "p-2", "mb-1");
             div.textContent = `${data.username}: ${data.message}`;
-            document.querySelector("#id_chat_messages").appendChild(div);
-            document.querySelector("#id_chat_messages").scrollTop = document.querySelector("#id_chat_messages").scrollHeight;
+            document.querySelector("#chat_messages").appendChild(div);
+            document.querySelector("#chat_messages").scrollTop = document.querySelector("#chat_messages").scrollHeight;
         };
     </script>
 {% endblock content %}
