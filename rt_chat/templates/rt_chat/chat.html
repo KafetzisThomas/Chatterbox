@@ -2,54 +2,69 @@
 {% block title %}Home Page{% endblock title %}
 
 {% block content %}
-<div class="text-center">
-    <h1>Hello, welcome to my chat app {{ request.user|title }}!</h1>
-    <form action="{% url 'users:logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-secondary">Logout</button>
-    </form>
-</div>
+    <div class="container mt-4">
+        <div class="text-center">
+            <h1 class="display-4">Welcome, {{ request.user|title }}!</h1>
+            <form action="{% url 'users:logout' %}" method="post" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
 
-<div class="d-flex flex-column align-items-center mt-5" id="id_chat_container">
-    <div class="d-flex align-items-center" id="id_chat_item_container" style="font-size: 20px; width: 300px;">
-        <input type="text" class="form-control me-2" id="id_message_send_input" style="width: 70%;" />
-        <button type="submit" class="btn btn-secondary" id="id_message_send_button" style="width: 30%;">Send</button>
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Chat Room</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="id_chat_messages" class="overflow-auto mb-3" style="height: 300px; background-color: #f8f9fa; border-radius: 5px; padding: 10px;">
+                            <!-- Chat messages will appear here -->
+                        </div>
+                        <div class="d-flex">
+                            <input type="text" class="form-control me-2" id="id_message_send_input" placeholder="Type your message..." autofocus />
+                            <button type="submit" class="btn btn-success" id="id_message_send_button">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="id_chat_messages" class="mt-3" style="width: 300px;">
-        <!-- Chat messages will appear here -->
-    </div>
-</div>
 
-<script>
-    const chatSocket = new WebSocket("ws://" + window.location.host + "/");
+    <script>
+        const chatSocket = new WebSocket("ws://" + window.location.host + "/");
 
-    chatSocket.onopen = function (e) {
-        console.log("The connection was set up successfully!");
-    };
+        chatSocket.onopen = function (e) {
+            console.log("The connection was set up successfully!");
+        };
 
-    chatSocket.onclose = function (e) {
-        console.log("Something unexpected happened!");
-    };
+        chatSocket.onclose = function (e) {
+            console.log("Something unexpected happened!");
+        };
 
-    document.querySelector("#id_message_send_input").focus();
+        document.querySelector("#id_message_send_input").focus();
 
-    document.querySelector("#id_message_send_input").onkeyup = function (e) {
-        if (e.keyCode == 13) {
-            document.querySelector("#id_message_send_button").click();
-        }
-    };
+        document.querySelector("#id_message_send_input").onkeyup = function (e) {
+            if (e.keyCode === 13) {
+                document.querySelector("#id_message_send_button").click();
+            }
+        };
 
-    document.querySelector("#id_message_send_button").onclick = function (e) {
-        var messageInput = document.querySelector("#id_message_send_input").value;
-        chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ request.user.username }}" }));
-    };
+        document.querySelector("#id_message_send_button").onclick = function (e) {
+            const messageInput = document.querySelector("#id_message_send_input").value.trim();
+            if (messageInput) {
+                chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ request.user.username }}" }));
+            }
+            document.querySelector("#id_message_send_input").value = "";
+        };
 
-    chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        var div = document.createElement("div");
-        div.textContent = data.username + ": " + data.message;
-        document.querySelector("#id_message_send_input").value = "";
-        document.querySelector("#id_chat_messages").appendChild(div);
-    };
-</script>
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const div = document.createElement("div");
+            div.classList.add("alert", "alert-secondary", "p-2", "mb-1");
+            div.textContent = `${data.username}: ${data.message}`;
+            document.querySelector("#id_chat_messages").appendChild(div);
+            document.querySelector("#id_chat_messages").scrollTop = document.querySelector("#id_chat_messages").scrollHeight;
+        };
+    </script>
 {% endblock content %}
