@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Webpage title -->
-    <title>Real-Time-Chat - {% block title %}{% endblock title %}</title>
+    <title>Real-Time-Chat</title>
 
     <!-- Bootstrap CSS -->
     {% load django_bootstrap5 %}
@@ -15,9 +15,22 @@
 </head>
 
 <body>
-    <!-- custom content start -->
-    {% block content %}{% endblock %}
-    <!-- custom content end -->
+    <!-- main start -->
+    <main role="main" class="container">
+        <div class="row justify-content-center mt-lg-5 mt-3">
+            <div class="col-md-8 pb-2 mb-2">
+                <!-- custom page header start -->
+                {% block page_header %}{% endblock page_header %}
+                <!-- custom page header end -->
+            </div>
+            <div class="col-md-8">
+                <!-- custom content start -->
+                {% block content %}{% endblock %}
+                <!-- custom content end -->
+            </div>
+        </div>
+    </main>
+    <!-- main end -->
 </body>
 
 </html>

@@ -1,12 +1,15 @@
 {% extends "rt_chat/base.html" %}
-{% block title %}Register{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block page_header %}
+    <h1>Create an account.</h1>
+{% endblock page_header %}
 
 {% block content %}
-<form method="POST" action="{% url 'users:register' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button name="submit" class="btn btn-secondary">Register</button>
-    <input type="hidden" name="next" value="{% url 'users:login' %}" />
-</form>
+    <form method="POST" action="{% url 'users:register' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button name="submit" class="btn btn-success">Register</button>
+        <input type="hidden" name="next" value="{% url 'users:login' %}" />
+    </form>
 {% endblock content %}

@@ -1,12 +1,18 @@
 {% extends "rt_chat/base.html" %}
-{% block title %}Login{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block page_header %}
+    <h1>Log in to your account.</h1>
+{% endblock page_header %}
 
 {% block content %}
-<form method="POST" action="{% url 'users:login' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button name="submit" class="btn btn-secondary">Log in</button>
-    <input type="hidden" name="next" value="{% url 'rt_chat:chat' %}" />
-</form>
+    <form method="POST" action="{% url 'users:login' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex">
+            <button name="submit" class="btn btn-success me-2">Log in</button>
+            <a class="btn btn-outline-primary" href="{% url 'users:register' %}">Sign up</a>
+        </div>
+        <input type="hidden" name="next" value="{% url 'rt_chat:chat' %}" />
+    </form>
 {% endblock content %}

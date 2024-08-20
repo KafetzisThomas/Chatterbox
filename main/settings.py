@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "users",
     # Third-Party apps
     "django_bootstrap5",
+    "crispy_forms",
+    "crispy_bootstrap5",
     "channels",
     "daphne",
     # Default django apps
@@ -79,6 +81,9 @@ WSGI_APPLICATION = "main.wsgi.application"
 
 ASGI_APPLICATION = "main.asgi.application"
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
