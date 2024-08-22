@@ -2,7 +2,7 @@
 
 {% block page_header %}
     <div class="text-center">
-        <h1 class="display-4">Welcome, {{ request.user|title }}!</h1>
+        <h5 class="display-4">Welcome, {{ request.user|title }}!</h5>
         <form action="{% url 'users:logout' %}" method="post" class="mt-3">
             {% csrf_token %}
             <a href="{% url 'rt_chat:create_group' %}" class="btn btn-secondary">Create Private Group</a>
@@ -12,30 +12,93 @@
 {% endblock page_header %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Chat Room: {{ group.name }}</h5>
-        </div>
-        <div class="card-body">
-            <div id="chat_messages" class="overflow-auto bg-light rounded p-3 mb-3" style="height: 300px;">
-                <!-- Chat messages will appear here -->
-                {% for message in messages %}
-                    <div class="alert alert-secondary p-2 mb-1">
-                        <strong>{{ message.user.username }}:</strong> {{ message.content }}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- sidebar -->
+                            <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
+                                <h4 class="text-center">Members</h4>
+                                <div class="p-3 profile-container">
+                                    <ul class="list-unstyled mb-0">
+                                        {% for member in group.members.all %}
+                                            <li class="p-2 border-bottom">
+                                                <a href="#" class="d-flex justify-content-between">
+                                                    <div class="d-flex flex-row">
+                                                        <div>
+                                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar1" class="d-flex align-self-center me-3" width="60">
+                                                        </div>
+                                                        <div class="pt-1">
+                                                            <p class="fw-bold mb-0">{{ member.username }}</p>
+                                                            <p class="small text-muted">Last message</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pt-1">
+                                                        <p class="small text-muted mb-1">0 mins ago</p>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% empty %}
+                                            <h4>No users yet.</h4>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- chat messages -->
+                            <div class="col-md-6 col-lg-7 col-xl-8">
+                                <div id="messages-container" class="pt-3 pe-3 messages-container">
+                                    {% for message in messages %}
+                                        {% if message.user == request.user %}
+                                            <!-- message from the signed-in user (align right) -->
+                                            <div class="d-flex flex-row justify-content-end">
+                                                <div>
+                                                    <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content }}</p>
+                                                    <p class="small me-3 mb-3 rounded-3 text-muted float-end">12:00 PM | Aug 13</p>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <!-- message from other users (align left) -->
+                                            <div class="d-flex flex-row justify-content-start">
+                                                <div>
+                                                    <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content }}</p>
+                                                    <p class="small ms-3 mb-3 rounded-3 text-muted">12:00 PM | Aug 13</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% empty %}
+                                        <div class="alert alert-info">No messages yet.</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp" id="avatar3" alt="avatar3">
+                                    <input type="text" class="form-control form-control-lg ms-2" id="message_send_input" placeholder="Type message" autofocus>
+                                    <a id="message_send_button" class="ms-3" href="#"><i class="bi bi-send"></i></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                {% empty %}
-                    <div class="alert alert-info">No messages yet.</div>
-                {% endfor %}
-            </div>
-            <div class="d-flex">
-                <input type="text" class="form-control me-2" id="message_send_input" placeholder="Type your message"
-                    autofocus />
-                <button type="submit" class="btn btn-success" id="message_send_button">Send</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
     <script>
+        // Automatically scroll to the bottom when the page loads
+        window.onload = function() {
+            var container = document.getElementById('messages-container');
+            container.scroll({
+                top: container.scrollHeight,
+                behavior: 'smooth'
+            });
+        };
+
+        // WebSocket connection for real-time chat
         const groupName = "{{ group.name }}";
         const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + groupName + "/");
 
@@ -66,10 +129,30 @@
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const div = document.createElement("div");
-            div.classList.add("alert", "alert-secondary", "p-2", "mb-1");
-            div.textContent = `${data.username}: ${data.message}`;
-            document.querySelector("#chat_messages").appendChild(div);
-            document.querySelector("#chat_messages").scrollTop = document.querySelector("#chat_messages").scrollHeight;
+
+            // Check if the message is from the signed-in user
+            if (data.username === "{{ request.user.username }}") {
+                div.classList.add("d-flex", "flex-row", "justify-content-end");
+
+                div.innerHTML = `
+                    <div>
+                        <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">${data.message}</p>
+                        <p class="small me-3 mb-3 rounded-3 text-muted float-end">Just now</p>
+                    </div>
+                `;
+            } else {
+                div.classList.add("d-flex", "flex-row", "justify-content-start");
+
+                div.innerHTML = `
+                    <div>
+                        <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">${data.message}</p>
+                        <p class="small ms-3 mb-3 rounded-3 text-muted">Just now</p>
+                    </div>
+                `;
+            }
+
+            document.querySelector("#messages-container").appendChild(div);
+            document.querySelector("#messages-container").scrollTop = document.querySelector("#messages-container").scrollHeight;
         };
     </script>
 {% endblock content %}
