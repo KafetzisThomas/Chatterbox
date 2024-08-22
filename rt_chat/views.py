@@ -44,3 +44,7 @@ def create_group(request):
 
     context = {"form": form}
     return render(request, "rt_chat/create_group.html", context)
+
+
+def test(request):
+    return render(request, "rt_chat/test.html")

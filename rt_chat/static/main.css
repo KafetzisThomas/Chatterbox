@@ -1,0 +1,33 @@
+body {
+    background-color: #adbdcd;;
+}
+
+#chat {
+    border-radius: 15px;
+}
+
+#chat .form-control {
+    border-color: transparent;
+}
+
+#chat .form-control:focus {
+    border-color: transparent;
+    box-shadow: inset 0px 0px 0px 1px transparent;
+}
+
+#avatar2, #avatar3 {
+    width: 45px;
+    height: 100%;
+}
+
+/* Add scrolling to profile container */
+.profile-container {
+    max-height: 550px;
+    overflow-y: auto;
+}
+
+/* Add scrolling to message container */
+.messages-container {
+    max-height: 500px;
+    overflow-y: auto;
+}

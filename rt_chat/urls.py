@@ -11,4 +11,5 @@ urlpatterns = [
     path("create-group/", views.create_group, name="create_group"),
     # Join an existing private group chat page
     path("chat/<str:group_name>/", views.chat, name="chat"),
+    path("test/", views.test, name="test"),
 ]
