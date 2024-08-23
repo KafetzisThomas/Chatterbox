@@ -1,7 +1,9 @@
-from django.urls import path
-from .consumers import ChatConsumer
+from django.urls import re_path
+from consumers import ChatConsumer
 
-# Route WebSocket connections to ChatConsumer for a specific chat group
+# WebSocket URL pattern with both usernames
 websocket_urlpatterns = [
-    path("ws/chat/<str:group_name>/", ChatConsumer.as_asgi()),
+    re_path(
+        r"^ws/chat/(?P<username>\w+)/(?P<other_username>\w+)/$", ChatConsumer.as_asgi()
+    ),
 ]

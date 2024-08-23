@@ -5,11 +5,8 @@ from rt_chat import views
 
 app_name = "rt_chat"
 urlpatterns = [
-    # Global chat group page
-    path("", views.chat, name="chat"),
-    # Create a new private chat group page
-    path("create-group/", views.create_group, name="create_group"),
-    # Join an existing private group chat page
-    path("chat/<str:group_name>/", views.chat, name="chat"),
-    path("test/", views.test, name="test"),
+    # Chat list page
+    path("", views.chat_list, name="chat_list"),
+    # Private chat page
+    path("chat/<str:username>/<str:other_username>/", views.chat, name="chat"),
 ]

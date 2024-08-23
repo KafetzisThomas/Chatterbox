@@ -2,10 +2,10 @@
 
 {% block page_header %}
     <div class="text-center">
-        <h5 class="display-4">Welcome, {{ request.user|title }}!</h5>
+        <h5 class="display-4">Welcome, {{ request.user.username|title }}!</h5>
         <form action="{% url 'users:logout' %}" method="post" class="mt-3">
             {% csrf_token %}
-            <a href="{% url 'rt_chat:create_group' %}" class="btn btn-secondary">Create Private Group</a>
+            <a href="{% url 'rt_chat:chat_list' %}" class="btn btn-secondary">Private Chats</a>
             <button type="submit" class="btn btn-danger">Logout</button>
         </form>
     </div>
@@ -18,41 +18,6 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <!-- sidebar -->
-                            <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
-                                <h4 class="text-center">Members</h4>
-                                <div class="p-3 profile-container">
-                                    <ul class="list-unstyled mb-0">
-                                        {% for group, last_message, time_diff in groups_with_last_messages %}
-                                            <li class="p-2 border-bottom">
-                                                <a href="{% url 'rt_chat:chat' group_name=group.name %}" class="d-flex justify-content-between">
-                                                    <div class="d-flex flex-row">
-                                                        <div>
-                                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar1" class="d-flex align-self-center me-3" width="60">
-                                                        </div>
-                                                        <div class="pt-1">
-                                                            <p class="fw-bold mb-0">{{ group.name }}</p>
-                                                            <p class="small text-muted">
-                                                                {% if last_message %}
-                                                                    {{ last_message.content }}
-                                                                {% else %}
-                                                                    No messages yet.
-                                                                {% endif %}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pt-1">
-                                                        <p class="small text-muted mb-1">{{ time_diff }}</p>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        {% empty %}
-                                            <h4>No users yet.</h4>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-
                             <!-- chat messages -->
                             <div class="col-md-6 col-lg-7 col-xl-8">
                                 <div id="messages-container" class="pt-3 pe-3 messages-container">
@@ -105,8 +70,9 @@
         };
 
         // WebSocket connection for real-time chat
-        const groupName = "{{ group.name }}";
-        const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + groupName + "/");
+        const username = "{{ user.username }}";
+        const otherUsername = "{{ other_user.username }}";
+        const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${username}/${otherUsername}/`);
 
         chatSocket.onopen = function (e) {
             console.log("The connection was set up successfully!");
@@ -127,7 +93,7 @@
         document.querySelector("#message_send_button").onclick = function (e) {
             const messageInput = document.querySelector("#message_send_input").value.trim();
             if (messageInput) {
-                chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ request.user.username }}" }));
+                chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ user.username }}" }));
             }
             document.querySelector("#message_send_input").value = "";
         };
@@ -136,8 +102,7 @@
             const data = JSON.parse(e.data);
             const div = document.createElement("div");
 
-            // Check if the message is from the signed-in user
-            if (data.username === "{{ request.user.username }}") {
+            if (data.username === "{{ user.username }}") {
                 div.classList.add("d-flex", "flex-row", "justify-content-end");
 
                 div.innerHTML = `
