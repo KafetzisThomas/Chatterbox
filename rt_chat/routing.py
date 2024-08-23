@@ -1,5 +1,5 @@
 from django.urls import re_path
-from consumers import ChatConsumer
+from .consumers import ChatConsumer
 
 # WebSocket URL pattern with both usernames
 websocket_urlpatterns = [
