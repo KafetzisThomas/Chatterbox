@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import PrivateChat, Message
 from .forms import PrivateChatForm
@@ -22,6 +24,39 @@ def chat_list(request):
 
     context = {"chats_with_last_messages": chats_with_last_messages}
     return render(request, "rt_chat/chat_list.html", context)
+
+
+@login_required
+def create_chat(request):
+    if request.method == "POST":
+        form = PrivateChatForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            other_user = get_object_or_404(User, username=username)
+
+            if other_user == request.user:
+                return redirect("rt_chat:chat_list")
+
+            # Fetch or create the chat
+            chat, _ = (
+                PrivateChat.objects.get_or_create(user1=request.user, user2=other_user)
+                if request.user.id < other_user.id
+                else PrivateChat.objects.get_or_create(
+                    user1=other_user, user2=request.user
+                )
+            )
+
+            return HttpResponseRedirect(
+                reverse(
+                    "rt_chat:chat", args=[request.user.username, other_user.username]
+                )
+            )
+
+    else:
+        form = PrivateChatForm()
+
+    context = {"form": form}
+    return render(request, "rt_chat/create_chat.html", context)
 
 
 @login_required
