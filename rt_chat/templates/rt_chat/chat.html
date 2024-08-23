@@ -23,16 +23,22 @@
                                 <h4 class="text-center">Members</h4>
                                 <div class="p-3 profile-container">
                                     <ul class="list-unstyled mb-0">
-                                        {% for member in group.members.all %}
+                                        {% for group, last_message in groups_with_last_messages %}
                                             <li class="p-2 border-bottom">
-                                                <a href="#" class="d-flex justify-content-between">
+                                                <a href="{% url 'rt_chat:chat' group_name=group.name %}" class="d-flex justify-content-between">
                                                     <div class="d-flex flex-row">
                                                         <div>
                                                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar1" class="d-flex align-self-center me-3" width="60">
                                                         </div>
                                                         <div class="pt-1">
-                                                            <p class="fw-bold mb-0">{{ member.username }}</p>
-                                                            <p class="small text-muted">Last message</p>
+                                                            <p class="fw-bold mb-0">{{ group.name }}</p>
+                                                            <p class="small text-muted">
+                                                                {% if last_message %}
+                                                                    {{ last_message.content }}
+                                                                {% else %}
+                                                                    No messages yet.
+                                                                {% endif %}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                     <div class="pt-1">

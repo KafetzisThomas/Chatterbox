@@ -21,7 +21,20 @@ def chat(request, group_name=None):
     # Fetch messages associated with the chat group, ordered by timestamp
     messages = Message.objects.filter(group=group).order_by("timestamp")
 
-    context = {"group": group, "messages": messages}
+    # Fetch all groups
+    groups = ChatGroup.objects.all()
+
+    # Create a list of tuples (group, last_message)
+    groups_with_last_messages = []
+    for grp in groups:
+        last_message = grp.messages.order_by("-timestamp").first()
+        groups_with_last_messages.append((grp, last_message))
+
+    context = {
+        "group": group,
+        "messages": messages,
+        "groups_with_last_messages": groups_with_last_messages,
+    }
     return render(request, "rt_chat/chat.html", context)
 
 
