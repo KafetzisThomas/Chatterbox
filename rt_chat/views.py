@@ -24,11 +24,12 @@ def chat(request, group_name=None):
     # Fetch all groups
     groups = ChatGroup.objects.all()
 
-    # Create a list of tuples (group, last_message)
+    # Create a list of tuples (group, last_message, time_diff)
     groups_with_last_messages = []
     for grp in groups:
         last_message = grp.messages.order_by("-timestamp").first()
-        groups_with_last_messages.append((grp, last_message))
+        time_diff = last_message.get_time_diff() if last_message else "No messages yet"
+        groups_with_last_messages.append((grp, last_message, time_diff))
 
     context = {
         "group": group,

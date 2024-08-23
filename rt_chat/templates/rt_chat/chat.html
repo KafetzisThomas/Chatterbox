@@ -23,7 +23,7 @@
                                 <h4 class="text-center">Members</h4>
                                 <div class="p-3 profile-container">
                                     <ul class="list-unstyled mb-0">
-                                        {% for group, last_message in groups_with_last_messages %}
+                                        {% for group, last_message, time_diff in groups_with_last_messages %}
                                             <li class="p-2 border-bottom">
                                                 <a href="{% url 'rt_chat:chat' group_name=group.name %}" class="d-flex justify-content-between">
                                                     <div class="d-flex flex-row">
@@ -42,7 +42,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="pt-1">
-                                                        <p class="small text-muted mb-1">0 mins ago</p>
+                                                        <p class="small text-muted mb-1">{{ time_diff }}</p>
                                                     </div>
                                                 </a>
                                             </li>
@@ -62,7 +62,7 @@
                                             <div class="d-flex flex-row justify-content-end">
                                                 <div>
                                                     <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content }}</p>
-                                                    <p class="small me-3 mb-3 rounded-3 text-muted float-end">12:00 PM | Aug 13</p>
+                                                    <p class="small me-3 mb-3 rounded-3 text-muted float-end">{{ message.timestamp }}</p>
                                                 </div>
                                             </div>
                                         {% else %}
@@ -70,7 +70,7 @@
                                             <div class="d-flex flex-row justify-content-start">
                                                 <div>
                                                     <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content }}</p>
-                                                    <p class="small ms-3 mb-3 rounded-3 text-muted">12:00 PM | Aug 13</p>
+                                                    <p class="small ms-3 mb-3 rounded-3 text-muted">{{ message.timestamp }}</p>
                                                 </div>
                                             </div>
                                         {% endif %}
