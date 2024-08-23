@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -12,6 +13,8 @@
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+
+    <link rel="stylesheet" href="{% static 'main.css' %}">
 </head>
 
 <body>
@@ -23,12 +26,10 @@
                 {% block page_header %}{% endblock page_header %}
                 <!-- custom page header end -->
             </div>
-            <div class="col-md-8">
-                <!-- custom content start -->
-                {% block content %}{% endblock %}
-                <!-- custom content end -->
-            </div>
         </div>
+        <!-- custom content start -->
+        {% block content %}{% endblock %}
+        <!-- custom content end -->
     </main>
     <!-- main end -->
 </body>
