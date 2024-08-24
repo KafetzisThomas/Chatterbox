@@ -4,41 +4,39 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- chat messages -->
-                            <div class="col-md-12">
-                                <div id="messages-container" class="pt-3 pe-3 messages-container">
-                                    {% for message in messages %}
-                                        {% if message.user == request.user %}
-                                            <!-- message from the signed-in user (align right) -->
-                                            <div class="d-flex flex-row justify-content-end mb-3">
-                                                <div>
-                                                    <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content }}</p>
-                                                    <p class="small me-3 mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
-                                                </div>
-                                            </div>
-                                        {% else %}
-                                            <!-- message from other users (align left) -->
-                                            <div class="d-flex flex-row justify-content-start mb-3">
-                                                <div>
-                                                    <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content }}</p>
-                                                    <p class="small ms-3 mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    {% empty %}
-                                        <div class="alert alert-info text-center">No messages yet.</div>
-                                    {% endfor %}
-                                </div>
+                <!-- Fixed height for the card -->
+                <div class="card shadow-sm" style="height: 600px;">
+                    <div class="card-body d-flex flex-column" style="height: 100%;">
+                        <!-- chat messages -->
+                        <div id="messages-container" class="pt-3 pe-3 messages-container flex-grow-1 overflow-auto">
+                            {% for message in messages %}
+                                {% if message.user == request.user %}
+                                    <!-- message from the signed-in user (align right) -->
+                                    <div class="d-flex flex-row justify-content-end mb-3">
+                                        <div>
+                                            <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content }}</p>
+                                            <p class="small me-3 mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <!-- message from other users (align left) -->
+                                    <div class="d-flex flex-row justify-content-start mb-3">
+                                        <div>
+                                            <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content }}</p>
+                                            <p class="small ms-3 mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% empty %}
+                                <div class="alert alert-info text-center">No messages yet.</div>
+                            {% endfor %}
+                        </div>
 
-                                <div class="d-flex align-items-center mt-3">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp" id="avatar" alt="avatar" class="rounded-circle" width="45">
-                                    <input type="text" class="form-control form-control-lg ms-2" id="message_send_input" placeholder="Type message" autofocus>
-                                    <button id="message_send_button" class="btn btn-primary ms-2"><i class="bi bi-send"></i></button>
-                                </div>
-                            </div>
+                        <!-- message input area, stays at the bottom -->
+                        <div class="d-flex align-items-center mt-3">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp" id="avatar" alt="avatar" class="rounded-circle" width="45">
+                            <input type="text" class="form-control form-control-lg ms-2" id="message_send_input" placeholder="Type message" autofocus>
+                            <button id="message_send_button" class="btn btn-primary ms-2"><i class="bi bi-send"></i></button>
                         </div>
                     </div>
                 </div>

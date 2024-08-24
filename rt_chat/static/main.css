@@ -7,7 +7,7 @@ body {
   color: #808080;
   font-weight: 500;
   transition: color 0.3s ease;
-  }
+}
 
 /* Hover state styles for navigation links */
 .nav-link:hover {
@@ -18,7 +18,6 @@ body {
 .nav-link.active {
   color: #fff;
 }
-  
 
 #chat {
   border-radius: 15px;
@@ -44,8 +43,9 @@ body {
   overflow-y: auto;
 }
 
-/* Add scrolling to message container */
+/* Fixed height for message container */
 .messages-container {
-  max-height: 500px;
   overflow-y: auto;
+  height: calc(100% - 60px);
+  max-height: calc(100% - 60px);  /* Ensure max height also respects the input area */
 }
