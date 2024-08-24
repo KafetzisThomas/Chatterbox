@@ -1,19 +1,23 @@
 from datetime import datetime, timedelta, timezone
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
-class ChatGroup(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    members = models.ManyToManyField(User, related_name="chat_groups")
+class PrivateChat(models.Model):
+    user1 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="chats_user1"
+    )
+    user2 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="chats_user2"
+    )
 
     def __str__(self):
-        return self.name
+        return f"Chat between {self.user1.username} and {self.user2.username}"
 
 
 class Message(models.Model):
-    group = models.ForeignKey(
-        ChatGroup, on_delete=models.CASCADE, related_name="messages"
+    chat = models.ForeignKey(
+        PrivateChat, on_delete=models.CASCADE, related_name="messages"
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()

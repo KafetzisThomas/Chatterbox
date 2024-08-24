@@ -1,11 +1,11 @@
 {% extends "rt_chat/base.html" %}
 
 {% block page_header %}
-    <div class="text-center">
-        <h5 class="display-4">Welcome, {{ request.user|title }}!</h5>
+    <div class="text-center mb-4">
+        <h5 class="display-4">Welcome, {{ request.user.username|title }}!</h5>
         <form action="{% url 'users:logout' %}" method="post" class="mt-3">
             {% csrf_token %}
-            <a href="{% url 'rt_chat:create_group' %}" class="btn btn-secondary">Create Private Group</a>
+            <a href="{% url 'rt_chat:chat_list' %}" class="btn btn-secondary me-2">Private Chats</a>
             <button type="submit" class="btn btn-danger">Logout</button>
         </form>
     </div>
@@ -15,74 +15,39 @@
     <div class="container py-5">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="row">
-                            <!-- sidebar -->
-                            <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
-                                <h4 class="text-center">Members</h4>
-                                <div class="p-3 profile-container">
-                                    <ul class="list-unstyled mb-0">
-                                        {% for group, last_message, time_diff in groups_with_last_messages %}
-                                            <li class="p-2 border-bottom">
-                                                <a href="{% url 'rt_chat:chat' group_name=group.name %}" class="d-flex justify-content-between">
-                                                    <div class="d-flex flex-row">
-                                                        <div>
-                                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar1" class="d-flex align-self-center me-3" width="60">
-                                                        </div>
-                                                        <div class="pt-1">
-                                                            <p class="fw-bold mb-0">{{ group.name }}</p>
-                                                            <p class="small text-muted">
-                                                                {% if last_message %}
-                                                                    {{ last_message.content }}
-                                                                {% else %}
-                                                                    No messages yet.
-                                                                {% endif %}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pt-1">
-                                                        <p class="small text-muted mb-1">{{ time_diff }}</p>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        {% empty %}
-                                            <h4>No users yet.</h4>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-
                             <!-- chat messages -->
-                            <div class="col-md-6 col-lg-7 col-xl-8">
+                            <div class="col-md-12">
                                 <div id="messages-container" class="pt-3 pe-3 messages-container">
                                     {% for message in messages %}
                                         {% if message.user == request.user %}
                                             <!-- message from the signed-in user (align right) -->
-                                            <div class="d-flex flex-row justify-content-end">
+                                            <div class="d-flex flex-row justify-content-end mb-3">
                                                 <div>
                                                     <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content }}</p>
-                                                    <p class="small me-3 mb-3 rounded-3 text-muted float-end">{{ message.timestamp }}</p>
+                                                    <p class="small me-3 mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
                                                 </div>
                                             </div>
                                         {% else %}
                                             <!-- message from other users (align left) -->
-                                            <div class="d-flex flex-row justify-content-start">
+                                            <div class="d-flex flex-row justify-content-start mb-3">
                                                 <div>
                                                     <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content }}</p>
-                                                    <p class="small ms-3 mb-3 rounded-3 text-muted">{{ message.timestamp }}</p>
+                                                    <p class="small ms-3 mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
                                                 </div>
                                             </div>
                                         {% endif %}
                                     {% empty %}
-                                        <div class="alert alert-info">No messages yet.</div>
+                                        <div class="alert alert-info text-center">No messages yet.</div>
                                     {% endfor %}
                                 </div>
 
-                                <div class="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp" id="avatar3" alt="avatar3">
+                                <div class="d-flex align-items-center mt-3">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp" id="avatar" alt="avatar" class="rounded-circle" width="45">
                                     <input type="text" class="form-control form-control-lg ms-2" id="message_send_input" placeholder="Type message" autofocus>
-                                    <a id="message_send_button" class="ms-3" href="#"><i class="bi bi-send"></i></a>
+                                    <button id="message_send_button" class="btn btn-primary ms-2"><i class="bi bi-send"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -105,8 +70,9 @@
         };
 
         // WebSocket connection for real-time chat
-        const groupName = "{{ group.name }}";
-        const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + groupName + "/");
+        const username = "{{ user.username }}";
+        const otherUsername = "{{ other_user.username }}";
+        const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${username}/${otherUsername}/`);
 
         chatSocket.onopen = function (e) {
             console.log("The connection was set up successfully!");
@@ -127,32 +93,31 @@
         document.querySelector("#message_send_button").onclick = function (e) {
             const messageInput = document.querySelector("#message_send_input").value.trim();
             if (messageInput) {
-                chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ request.user.username }}" }));
+                chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ user.username }}" }));
+                document.querySelector("#message_send_input").value = "";
             }
-            document.querySelector("#message_send_input").value = "";
         };
 
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const div = document.createElement("div");
 
-            // Check if the message is from the signed-in user
-            if (data.username === "{{ request.user.username }}") {
-                div.classList.add("d-flex", "flex-row", "justify-content-end");
+            if (data.username === "{{ user.username }}") {
+                div.classList.add("d-flex", "flex-row", "justify-content-end", "mb-3");
 
                 div.innerHTML = `
                     <div>
                         <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">${data.message}</p>
-                        <p class="small me-3 mb-3 rounded-3 text-muted float-end">Just now</p>
+                        <p class="small me-3 mb-0 rounded-3 text-muted text-end">Just now</p>
                     </div>
                 `;
             } else {
-                div.classList.add("d-flex", "flex-row", "justify-content-start");
+                div.classList.add("d-flex", "flex-row", "justify-content-start", "mb-3");
 
                 div.innerHTML = `
                     <div>
                         <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">${data.message}</p>
-                        <p class="small ms-3 mb-3 rounded-3 text-muted">Just now</p>
+                        <p class="small ms-3 mb-0 rounded-3 text-muted">Just now</p>
                     </div>
                 `;
             }

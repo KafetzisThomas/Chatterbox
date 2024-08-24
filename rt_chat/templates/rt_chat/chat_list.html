@@ -1,0 +1,50 @@
+{% extends "rt_chat/base.html" %}
+
+{% block page_header %}
+    <h1 class="text-center my-4">Your Private Chats</h1>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Chats</h4>
+                    <a href="{% url 'rt_chat:create_chat' %}" class="btn btn-secondary">Create Private Chat</a>
+                </div>
+                <div class="card-body">
+                    <div class="profile-container">
+                        <ul class="list-unstyled mb-0">
+                            {% for other_user, last_message, time_diff in chats_with_last_messages %}
+                                {% if request.user != other_user %}
+                                    <li class="p-3 border-bottom">
+                                        <a href="{% url 'rt_chat:chat' username=request.user.username other_username=other_user.username %}" class="d-flex align-items-center text-decoration-none text-dark">
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar1" class="rounded-circle me-3" width="60">
+                                            <div class="flex-grow-1">
+                                                <p class="fw-bold mb-0">{{ other_user.username }}</p>
+                                                <p class="small text-muted mb-0">
+                                                    {% if last_message %}
+                                                        {{ last_message.content }}
+                                                    {% else %}
+                                                        No messages yet.
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                            <div class="text-muted small ms-3">
+                                                <p class="mb-0">{{ time_diff }}</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% empty %}
+                                <li class="text-center py-3"><h4>No chats yet.</h4></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

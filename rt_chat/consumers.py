@@ -2,7 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
-from .models import ChatGroup, Message
+from .models import PrivateChat, Message
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -14,12 +14,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Handle the WebSocket connection when a client connects.
         """
-        # Extract the group name from the URL route
-        self.group_name = self.scope["url_route"]["kwargs"]["group_name"]
-        # Fetch the chat group from the database
-        self.group = await self.get_group(self.group_name)
+        # Extract usernames from the URL route
+        username1 = self.scope["url_route"]["kwargs"]["username"]
+        username2 = self.scope["url_route"]["kwargs"]["other_username"]
+
+        # Create a unique group name based on both usernames
+        self.group_name = self.create_group_name(username1, username2)
+
         # Define the group name used by the channel layer
         self.room_group_name = f"chat_{self.group_name}"
+
+        # Fetch or create the chat group from the database
+        self.chat = await self.get_or_create_chat(username1, username2)
 
         # Add the WebSocket connection to the group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -39,11 +45,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = data["message"]
         username = data["username"]
 
-        # Get the user and save the message to the db
+        # Get the user and save the message to the database
         user = await self.get_user(username)
-        await self.save_message(self.group, user, message)
+        await self.save_message(self.chat, user, message)
 
-        # Display the message to the chat group
+        # Display the message to the WebSocket group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -65,22 +71,39 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     @database_sync_to_async
-    def get_group(self, group_name):
-        """
-        Retrieve a chat group from the db by its name.
-        """
-        return ChatGroup.objects.get(name=group_name)
-
-    @database_sync_to_async
     def get_user(self, username):
         """
-        Retrieve a user from the db by their username.
+        Retrieve a user from the database by their username.
         """
         return User.objects.get(username=username)
 
     @database_sync_to_async
-    def save_message(self, group, user, message):
+    def get_or_create_chat(self, username1, username2):
         """
-        Save message to the db.
+        Get or create a private chat between two users.
         """
-        Message.objects.create(group=group, user=user, content=message)
+        user1 = User.objects.get(username=username1)
+        user2 = User.objects.get(username=username2)
+        chat, _ = (
+            PrivateChat.objects.get_or_create(user1=user1, user2=user2)
+            if user1.id < user2.id
+            else PrivateChat.objects.get_or_create(user1=user2, user2=user1)
+        )
+        return chat
+
+    @database_sync_to_async
+    def save_message(self, chat, user, message):
+        """
+        Save message to the database.
+        """
+        Message.objects.create(chat=chat, user=user, content=message)
+
+    def create_group_name(self, username1, username2):
+        """
+        Create a group name based on two usernames, in a consistent order.
+        """
+        return (
+            f"{username1}_{username2}"
+            if username1 < username2
+            else f"{username2}_{username1}"
+        )

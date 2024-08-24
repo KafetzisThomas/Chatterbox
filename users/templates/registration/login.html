@@ -13,6 +13,6 @@
             <button name="submit" class="btn btn-success me-2">Log in</button>
             <a class="btn btn-outline-primary" href="{% url 'users:register' %}">Sign up</a>
         </div>
-        <input type="hidden" name="next" value="{% url 'rt_chat:chat' %}" />
+        <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
     </form>
 {% endblock content %}

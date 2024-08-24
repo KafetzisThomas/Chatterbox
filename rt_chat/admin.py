@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ChatGroup, Message
+from .models import PrivateChat, Message
 
-admin.site.register(ChatGroup)
+admin.site.register(PrivateChat)
 admin.site.register(Message)
