@@ -1,0 +1,33 @@
+{% extends "rt_chat/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Your account settings.</h2>
+    <form action="{% url 'users:account' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button name="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save changes</button>
+        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_account_modal" role="button"><i class="bi bi-trash"></i> Delete account</a>
+        <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
+    </form>
+
+    <!-- Delete account modal start -->
+    <div class="modal fade" id="delete_account_modal" tabindex="-1" aria-labelledby="delete_account_modal_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="delete_account_modal_label">DELETE ACCOUNT</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Procceed below to delete your account and all associated data. Deleting your account is permanent. It cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-danger" href="{% url 'users:delete_account' %}" role="button">Delete account</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete account modal end -->
+{% endblock content %}

@@ -40,7 +40,7 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == '/account_settings/' %}active{% endif %}" href="#"><i class="bi bi-gear me-2"></i>Account Settings</a>
+                            <a class="nav-link {% if request.path == '/account/' %}active{% endif %}" href="{% url 'users:account' %}"><i class="bi bi-gear me-2"></i>Account Settings</a>
                         </li>
                         <li class="nav-item">
                             <form action="{% url 'users:logout' %}" method="POST" class="d-inline">
