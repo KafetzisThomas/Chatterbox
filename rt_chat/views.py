@@ -67,12 +67,15 @@ def chat(request, username, other_username):
     if user1 == user2:
         return redirect("rt_chat:chat_list")
 
-    # Fetch or create the chat
-    chat, _ = (
-        PrivateChat.objects.get_or_create(user1=user1, user2=user2)
-        if user1.id < user2.id
-        else PrivateChat.objects.get_or_create(user1=user2, user2=user1)
-    )
+    if request.user == user1:
+        # Fetch or create the chat
+        chat, _ = (
+            PrivateChat.objects.get_or_create(user1=user1, user2=user2)
+            if user1.id < user2.id
+            else PrivateChat.objects.get_or_create(user1=user2, user2=user1)
+        )
+    else:
+        return redirect("rt_chat:chat_list")
 
     messages = Message.objects.filter(chat=chat).order_by("timestamp")
 
