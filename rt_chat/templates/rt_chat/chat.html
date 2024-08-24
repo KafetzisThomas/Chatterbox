@@ -1,18 +1,7 @@
 {% extends "rt_chat/base.html" %}
 
-{% block page_header %}
-    <div class="text-center mb-4">
-        <h5 class="display-4">Welcome, {{ request.user.username|title }}!</h5>
-        <form action="{% url 'users:logout' %}" method="post" class="mt-3">
-            {% csrf_token %}
-            <a href="{% url 'rt_chat:chat_list' %}" class="btn btn-secondary me-2">Private Chats</a>
-            <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
-    </div>
-{% endblock page_header %}
-
 {% block content %}
-    <div class="container py-5">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow-sm">

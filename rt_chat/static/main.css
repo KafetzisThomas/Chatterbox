@@ -1,33 +1,51 @@
 body {
-    background-color: #adbdcd;
+  background-color: #adbdcd;
 }
 
+/* Navigation link styles */
+.nav-link {
+  color: #808080;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  }
+
+/* Hover state styles for navigation links */
+.nav-link:hover {
+  color: #fff;
+}
+
+/* Active state styles for navigation links */
+.nav-link.active {
+  color: #fff;
+}
+  
+
 #chat {
-    border-radius: 15px;
+  border-radius: 15px;
 }
 
 #chat .form-control {
-    border-color: transparent;
+  border-color: transparent;
 }
 
 #chat .form-control:focus {
-    border-color: transparent;
-    box-shadow: inset 0px 0px 0px 1px transparent;
+  border-color: transparent;
+  box-shadow: inset 0px 0px 0px 1px transparent;
 }
 
 #avatar {
-    width: 45px;
-    height: 45px;
+  width: 45px;
+  height: 45px;
 }
 
 /* Add scrolling to profile container */
 .profile-container {
-    max-height: 550px;
-    overflow-y: auto;
+  max-height: 550px;
+  overflow-y: auto;
 }
 
 /* Add scrolling to message container */
 .messages-container {
-    max-height: 500px;
-    overflow-y: auto;
+  max-height: 500px;
+  overflow-y: auto;
 }

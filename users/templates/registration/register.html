@@ -1,11 +1,8 @@
 {% extends "rt_chat/base.html" %}
 {% load crispy_forms_tags %}
 
-{% block page_header %}
-    <h1>Create an account.</h1>
-{% endblock page_header %}
-
 {% block content %}
+    <h1 class="mb-3">Create an account.</h1>
     <form method="POST" action="{% url 'users:register' %}">
         {% csrf_token %}
         {{ form|crispy }}
