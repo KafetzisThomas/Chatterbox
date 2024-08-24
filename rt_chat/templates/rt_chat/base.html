@@ -32,7 +32,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'rt_chat:chat_list' %}"><i class="bi bi-chat-dots me-2"></i>Private Chats</a>
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'rt_chat:chat_list' %}"><i class="bi bi-chat-dots me-2"></i>All Chats</a>
                         </li>
                     {% endif %}
                 </ul>

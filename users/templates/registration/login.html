@@ -2,11 +2,19 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h1 class="mb-3">Log in to your account.</h1>
-    <form method="POST" action="{% url 'users:login' %}">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button name="submit" class="btn btn-success">Log in</button>
-        <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
-    </form>
+    <div class="container">
+        <h1 class="mb-4 text-center">Log in to Your Account</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form method="POST" action="{% url 'users:login' %}" class="bg-light p-4 rounded shadow-sm">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="text-center mt-3">
+                        <button name="submit" class="btn btn-success">Log in</button>
+                    </div>
+                    <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
