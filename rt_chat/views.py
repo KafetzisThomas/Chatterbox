@@ -81,6 +81,7 @@ def chat(request, username, other_username):
 
     context = {
         "messages": messages,
+        "current_user": user1,
         "other_user": user2,
     }
     return render(request, "rt_chat/chat.html", context)

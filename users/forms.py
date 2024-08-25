@@ -2,9 +2,10 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from .models import Profile
 
 
-class CustomUserChangeForm(forms.ModelForm):
+class UpdateUserForm(forms.ModelForm):
     password1 = forms.CharField(
         label="New Password", widget=forms.PasswordInput, required=False
     )
@@ -38,3 +39,13 @@ class CustomUserChangeForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class UpdateProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(
+        widget=forms.FileInput(attrs={"class": "form-control-file"}), required=False
+    )
+
+    class Meta:
+        model = Profile
+        fields = ["avatar"]

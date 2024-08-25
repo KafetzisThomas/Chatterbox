@@ -34,7 +34,7 @@
 
                         <!-- message input area, stays at the bottom -->
                         <div class="d-flex align-items-center mt-3">
-                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp" id="avatar" alt="avatar" class="rounded-circle" width="45">
+                            <img src="{{ current_user.profile.avatar.url }}" id="avatar" alt="avatar" class="rounded-circle">
                             <input type="text" class="form-control form-control-lg ms-2" id="message_send_input" placeholder="Type message" autofocus>
                             <button id="message_send_button" class="btn btn-primary ms-2"><i class="bi bi-send"></i></button>
                         </div>

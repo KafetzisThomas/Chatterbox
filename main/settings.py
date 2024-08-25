@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -142,6 +143,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Login and logout settings
 LOGIN_URL = "users:login"
 LOGOUT_REDIRECT_URL = "/"
+
+# Root directory for storing uploaded media files
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 # Configure django channels to use an in-memory channel layer
 # Not suitable for production, use Redis or a db instead

@@ -14,6 +14,7 @@ django-crispy-forms==2.3
 hyperlink==21.0.0
 idna==3.7
 incremental==24.7.2
+pillow==10.4.0
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pycparser==2.22

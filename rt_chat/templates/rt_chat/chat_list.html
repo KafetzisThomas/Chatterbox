@@ -16,7 +16,7 @@
                                     {% if request.user != other_user %}
                                         <li class="p-3 border-bottom">
                                             <a href="{% url 'rt_chat:chat' username=request.user.username other_username=other_user.username %}" class="d-flex align-items-center text-decoration-none text-dark">
-                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar1" class="rounded-circle me-3" width="60">
+                                                <img src="{{ other_user.profile.avatar.url }}" alt="avatar1" class="rounded-circle me-3" width="60">
                                                 <div class="flex-grow-1">
                                                     <p class="fw-bold mb-0">{{ other_user.username }}</p>
                                                     <p class="small text-muted mb-0">

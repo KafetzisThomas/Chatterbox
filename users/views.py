@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserChangeForm
+from .forms import UpdateUserForm, UpdateProfileForm
 from django.contrib.auth.models import User
 
 
@@ -25,17 +25,22 @@ def register(request):
 @login_required
 def account(request):
     if request.method == "POST":
-        form = CustomUserChangeForm(instance=request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
+        user_form = UpdateUserForm(instance=request.user, data=request.POST)
+        profile_form = UpdateProfileForm(
+            request.POST, request.FILES, instance=request.user.profile
+        )
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
             update_session_auth_hash(
                 request, request.user
             )  # Important for keeping the user logged in
             return redirect("rt_chat:chat_list")
     else:
-        form = CustomUserChangeForm(instance=request.user)
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
 
-    context = {"form": form}
+    context = {"user_form": user_form, "profile_form": profile_form}
     return render(request, "users/account.html", context)
 
 

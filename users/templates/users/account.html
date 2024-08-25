@@ -3,15 +3,26 @@
 
 {% block content %}
     <div class="container mb-4">
-        <h1 class="mb-4 text-center">Your account settings</h1>
+        <h1 class="mb-4 text-center">Your Account Settings</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <form method="POST" action="{% url 'users:account' %}" class="bg-light p-4 rounded shadow-sm">
+                <form method="POST" action="{% url 'users:account' %}" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm">
                     {% csrf_token %}
-                    {{ form|crispy }}
-                    <div class="text-center mt-3">
-                        <button name="submit" class="btn btn-primary"><i class="bi bi-floppy"></i> Save changes</button>
-                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_account_modal" role="button"><i class="bi bi-trash"></i> Delete account</a>
+                    <!-- profile picture -->
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-block">
+                            <img class="rounded-circle border border-secondary shadow-sm mb-2" src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                        </div>
+                    </div>
+
+                    <!-- form fields -->
+                    {{ user_form|crispy }}
+                    {{ profile_form|crispy }}
+
+                    <!-- save & delete buttons -->
+                    <div class="text-center mt-4">
+                        <button name="submit" class="btn btn-primary me-2"><i class="bi bi-floppy"></i> Save Changes</button>
+                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_account_modal" role="button"><i class="bi bi-trash"></i> Delete Account</a>
                     </div>
                     <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
                 </form>
