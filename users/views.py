@@ -42,7 +42,7 @@ def account(request):
             messages.success(
                 request, "Your account settings were successfully updated!"
             )
-            return redirect("rt_chat:chat_list")
+            return redirect("chatterbox:chat_list")
     else:
         user_form = UpdateUserForm(instance=request.user)
         profile_form = UpdateProfileForm(instance=request.user.profile)

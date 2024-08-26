@@ -1,4 +1,4 @@
-{% extends "rt_chat/base.html" %}
+{% extends "chatterbox/base.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}Account{% endblock title %}
@@ -26,7 +26,7 @@
                         <button name="submit" class="btn btn-primary me-2"><i class="bi bi-floppy"></i> Save Changes</button>
                         <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_account_modal" role="button"><i class="bi bi-trash"></i> Delete Account</a>
                     </div>
-                    <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
+                    <input type="hidden" name="next" value="{% url 'chatterbox:chat_list' %}" />
                 </form>
             </div>
         </div>

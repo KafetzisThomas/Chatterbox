@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Webpage title -->
-    <title>Real-Time-Chat - {% block title %}{% endblock title %}</title>
+    <title>Chatterbox - {% block title %}{% endblock title %}</title>
 
     <!-- Bootstrap CSS -->
     {% load django_bootstrap5 %}
@@ -26,7 +26,7 @@
     <!-- navbar start -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'rt_chat:chat_list' %}">Real-Time-Chat</a>
+            <a class="navbar-brand" href="{% url 'chatterbox:chat_list' %}">Chatterbox</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -36,7 +36,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'rt_chat:chat_list' %}"><i class="bi bi-chat-dots me-2"></i>All Chats</a>
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'chatterbox:chat_list' %}"><i class="bi bi-chat-dots me-2"></i>All Chats</a>
                         </li>
                     {% endif %}
                 </ul>

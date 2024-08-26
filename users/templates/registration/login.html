@@ -1,4 +1,4 @@
-{% extends "rt_chat/base.html" %}
+{% extends "chatterbox/base.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}Login{% endblock title %}
@@ -21,7 +21,7 @@
                     <div class="text-center mt-3">
                         <button name="submit" class="btn btn-success">Log in</button>
                     </div>
-                    <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
+                    <input type="hidden" name="next" value="{% url 'chatterbox:chat_list' %}" />
                 </form>
             </div>
         </div>

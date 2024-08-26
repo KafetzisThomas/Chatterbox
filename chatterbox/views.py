@@ -23,7 +23,7 @@ def chat_list(request):
         chats_with_last_messages.append((other_user, last_message, time_diff))
 
     context = {"chats_with_last_messages": chats_with_last_messages}
-    return render(request, "rt_chat/chat_list.html", context)
+    return render(request, "chatterbox/chat_list.html", context)
 
 
 @login_required
@@ -35,7 +35,7 @@ def create_chat(request):
             other_user = get_object_or_404(User, username=username)
 
             if other_user == request.user:
-                return redirect("rt_chat:chat_list")
+                return redirect("chatterbox:chat_list")
 
             # Fetch or create the chat
             chat, _ = (
@@ -48,7 +48,7 @@ def create_chat(request):
 
             return HttpResponseRedirect(
                 reverse(
-                    "rt_chat:chat", args=[request.user.username, other_user.username]
+                    "chatterbox:chat", args=[request.user.username, other_user.username]
                 )
             )
 
@@ -56,7 +56,7 @@ def create_chat(request):
         form = PrivateChatForm()
 
     context = {"form": form}
-    return render(request, "rt_chat/create_chat.html", context)
+    return render(request, "chatterbox/create_chat.html", context)
 
 
 @login_required
@@ -65,7 +65,7 @@ def chat(request, username, other_username):
     user2 = get_object_or_404(User, username=other_username)
 
     if user1 == user2:
-        return redirect("rt_chat:chat_list")
+        return redirect("chatterbox:chat_list")
 
     if request.user == user1:
         # Fetch or create the chat
@@ -75,7 +75,7 @@ def chat(request, username, other_username):
             else PrivateChat.objects.get_or_create(user1=user2, user2=user1)
         )
     else:
-        return redirect("rt_chat:chat_list")
+        return redirect("chatterbox:chat_list")
 
     messages = Message.objects.filter(chat=chat).order_by("timestamp")
 
@@ -84,4 +84,4 @@ def chat(request, username, other_username):
         "current_user": user1,
         "other_user": user2,
     }
-    return render(request, "rt_chat/chat.html", context)
+    return render(request, "chatterbox/chat.html", context)

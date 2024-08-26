@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # My apps
-    "rt_chat",
+    "chatterbox",
     "users",
     # Third-Party apps
     "django_bootstrap5",

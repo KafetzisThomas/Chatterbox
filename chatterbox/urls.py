@@ -1,9 +1,9 @@
-"""Defines URL patterns for rt_chat"""
+"""Defines URL patterns for chatterbox"""
 
 from django.urls import path
-from rt_chat import views
+from . import views
 
-app_name = "rt_chat"
+app_name = "chatterbox"
 urlpatterns = [
     # Chat list page
     path("", views.chat_list, name="chat_list"),

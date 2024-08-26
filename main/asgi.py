@@ -11,7 +11,7 @@ import os
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-from rt_chat import routing
+from chatterbox import routing
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "main.settings")
 

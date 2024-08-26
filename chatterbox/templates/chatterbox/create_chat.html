@@ -1,4 +1,4 @@
-{% extends "rt_chat/base.html" %}
+{% extends "chatterbox/base.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}Create Chat{% endblock title %}
@@ -8,13 +8,13 @@
         <h1 class="mb-4 text-center">Create Chat</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <form method="POST" action="{% url 'rt_chat:create_chat' %}" class="bg-light p-4 rounded shadow-sm">
+                <form method="POST" action="{% url 'chatterbox:create_chat' %}" class="bg-light p-4 rounded shadow-sm">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <div class="text-center mt-3">
                         <button type="submit" class="btn btn-primary">Create Chat</button>
                     </div>
-                    <input type="hidden" name="next" value="{% url 'rt_chat:chat_list' %}" />
+                    <input type="hidden" name="next" value="{% url 'chatterbox:chat_list' %}" />
                 </form>
             </div>
         </div>
