@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Webpage title -->
-    <title>Real-Time-Chat</title>
+    <title>Real-Time-Chat - {% block title %}{% endblock title %}</title>
 
     <!-- Bootstrap CSS -->
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 
+    <!-- Custom styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'main.css' %}">
 </head>
@@ -62,20 +63,11 @@
     </nav>
     <!-- navbar end -->
 
-    <!-- main start -->
-    <main role="main" class="container">
-        <div class="row justify-content-center mt-lg-5 mt-3">
-            <div class="col-md-8 pb-2 mb-2">
-                <!-- custom page header start -->
-                {% block page_header %}{% endblock page_header %}
-                <!-- custom page header end -->
-            </div>
-        </div>
+    <main role="main" class="container mt-lg-5 mt-3">
         <!-- custom content start -->
         {% block content %}{% endblock %}
         <!-- custom content end -->
     </main>
-    <!-- main end -->
 
     <!-- custom footer start -->
     {% block footer %}{% endblock footer %}
