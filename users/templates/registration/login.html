@@ -9,8 +9,15 @@
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <form method="POST" action="{% url 'users:login' %}" class="bg-light p-4 rounded shadow-sm">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
                     {% csrf_token %}
                     {{ form|crispy }}
+
                     <div class="text-center mt-3">
                         <button name="submit" class="btn btn-success">Log in</button>
                     </div>
