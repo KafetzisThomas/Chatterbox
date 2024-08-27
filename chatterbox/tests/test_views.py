@@ -1,6 +1,6 @@
 """
 This module contains test cases for the following views:
-* chat_list, create_chat
+* chat_list, create_chat, chat
 """
 
 from django.test import TestCase
@@ -177,3 +177,118 @@ class CreateChatViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "chatterbox/create_chat.html")
         self.assertIsInstance(response.context["form"], PrivateChatForm)
+
+
+class ChatViewTests(TestCase):
+    """
+    Test suite for the chat view.
+    """
+
+    def setUp(self):
+        """
+        Set up the test environment by creating users, chats, and messages.
+        """
+        self.user1 = User.objects.create_user(username="user1", password="password123")
+        self.user2 = User.objects.create_user(username="user2", password="password123")
+        self.user3 = User.objects.create_user(username="user3", password="password123")
+        self.client.login(username="user1", password="password123")
+
+        # Create chats
+        self.chat1 = PrivateChat.objects.create(user1=self.user1, user2=self.user2)
+
+        # Create messages
+        self.message1 = Message.objects.create(
+            chat=self.chat1, user=self.user1, content="Hello!", timestamp=timezone.now()
+        )
+        self.message2 = Message.objects.create(
+            chat=self.chat1, user=self.user2, content="Hi!", timestamp=timezone.now()
+        )
+
+    def test_redirect_if_not_logged_in(self):
+        """
+        Test that the view redirects to the login page if the user is not logged in.
+        """
+        self.client.logout()
+        response = self.client.get(
+            reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])
+        )
+        self.assertRedirects(
+            response,
+            f'{reverse("users:login")}?next={reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])}',
+        )
+
+    def test_chat_view_url_exists_at_desired_location(self):
+        """
+        Test that the chat view URL exists at the desired location.
+        """
+        response = self.client.get(
+            f"/chat/{self.user1.username}/{self.user2.username}/"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_chat_view_accessible_by_name(self):
+        """
+        Test that the chat view is accessible by its name.
+        """
+        response = self.client.get(
+            reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_chat_view_uses_correct_template(self):
+        """
+        Test that the chat view uses the correct template.
+        """
+        response = self.client.get(
+            reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])
+        )
+        self.assertTemplateUsed(response, "chatterbox/chat.html")
+
+    def test_chat_view_correct_context_data(self):
+        """
+        Test that the chat view provides the correct context data.
+        """
+        response = self.client.get(
+            reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Check context data
+        self.assertEqual(response.context["current_user"], self.user1)
+        self.assertEqual(response.context["other_user"], self.user2)
+        self.assertEqual(len(response.context["messages"]), 2)
+        self.assertEqual(response.context["messages"][0], self.message1)
+        self.assertEqual(response.context["messages"][1], self.message2)
+
+    def test_chat_view_redirects_if_user_not_involved_in_chat(self):
+        """
+        Test that the view redirects to the chat list if the user is not involved in the chat.
+        """
+        self.client.login(username="user3", password="password123")
+        response = self.client.get(
+            reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])
+        )
+        self.assertRedirects(response, reverse("chatterbox:chat_list"))
+
+    def test_chat_view_redirects_if_user_tries_to_chat_with_self(self):
+        """
+        Test that the view redirects to the chat list if the user tries to chat with themselves.
+        """
+        response = self.client.get(
+            reverse("chatterbox:chat", args=[self.user1.username, self.user1.username])
+        )
+        self.assertRedirects(response, reverse("chatterbox:chat_list"))
+
+    def test_chat_view_creates_chat_if_not_exists(self):
+        """
+        Test that the view creates a chat if it does not already exist.
+        """
+        self.client.login(username="user1", password="password123")
+        response = self.client.get(
+            reverse("chatterbox:chat", args=[self.user1.username, self.user3.username])
+        )
+        self.assertEqual(response.status_code, 200)
+        new_chat = PrivateChat.objects.filter(
+            user1=self.user1, user2=self.user3
+        ).first()
+        self.assertIsNotNone(new_chat)
