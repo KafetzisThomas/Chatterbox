@@ -1,6 +1,6 @@
 """
 This module contains test cases for the following views:
-* register, account
+* register, account, delete_account
 """
 
 from django.test import TestCase
@@ -169,3 +169,40 @@ class AccountViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "users/account.html")
         self.assertTrue(response.context["profile_form"].errors)
+
+
+class DeleteAccountViewTests(TestCase):
+    """
+    Test case for the delete_account view.
+    """
+
+    def setUp(self):
+        """
+        Set up the test environment.
+        """
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+        self.url = reverse("users:delete_account")
+
+    def test_delete_account_view_logged_in(self):
+        """
+        Test deleting the user account with a POST request.
+        """
+        self.client.login(username="testuser", password="testpassword")
+        response = self.client.post(self.url, follow=True)
+
+        # Check that the user is deleted
+        self.assertFalse(User.objects.filter(username="testuser").exists())
+        self.assertRedirects(response, reverse("users:register"))
+
+    def test_delete_account_view_not_logged_in(self):
+        """
+        Test accessing the view when not logged in.
+        """
+        response = self.client.post(self.url, follow=True)
+        login_url = reverse("users:login")
+        self.assertRedirects(response, f"{login_url}?next={self.url}")
+
+        # Ensure the user is not deleted
+        self.assertTrue(User.objects.filter(username="testuser").exists())
