@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "chatterbox",
     "users",
     # Third-Party apps
+    "django_extensions",
     "django_bootstrap5",
     "crispy_forms",
     "crispy_bootstrap5",
