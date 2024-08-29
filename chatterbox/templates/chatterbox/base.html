@@ -33,7 +33,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'chatterbox:chat_list' %}"><i class="bi bi-chat-dots me-2"></i>All Chats</a>
@@ -49,7 +49,7 @@
                         <li class="nav-item">
                             <form action="{% url 'users:logout' %}" method="POST" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger ms-3"><i class="bi bi-box-arrow-right me-2"></i>Log out</button>
+                                <button type="submit" class="btn btn-danger ms-lg-3"><i class="bi bi-box-arrow-right me-2"></i>Log out</button>
                             </form>
                         </li>
                     {% else %}
