@@ -17,7 +17,7 @@ class PrivateChatFormTest(TestCase):
         """
         form_data = {"username": "testuser"}
         form = PrivateChatForm(data=form_data)
-        self.assertTrue(form.is_valid())
+        self.assertTrue(form.is_valid(), form.errors)
 
     def test_form_empty_data(self):
         """
@@ -25,7 +25,7 @@ class PrivateChatFormTest(TestCase):
         """
         form_data = {"username": ""}
         form = PrivateChatForm(data=form_data)
-        self.assertFalse(form.is_valid())
+        self.assertFalse(form.is_valid(), form.errors)
         self.assertIn("username", form.errors)
         self.assertEqual(form.errors["username"], ["This field is required."])
 
@@ -35,7 +35,7 @@ class PrivateChatFormTest(TestCase):
         """
         form_data = {"username": "a" * 101}  # 101 characters
         form = PrivateChatForm(data=form_data)
-        self.assertFalse(form.is_valid())
+        self.assertFalse(form.is_valid(), form.errors)
         self.assertIn("username", form.errors)
         self.assertEqual(
             form.errors["username"],

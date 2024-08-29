@@ -46,7 +46,7 @@ class UpdateUserFormTests(TestCase):
         form_data = self.form_data.copy()
         form_data["password2"] = "differentpassword"
         form = UpdateUserForm(data=form_data, instance=self.user)
-        self.assertFalse(form.is_valid())
+        self.assertFalse(form.is_valid(), form.errors)
         self.assertIn("password2", form.errors)
 
     def test_form_invalid_password_validation(self):
@@ -56,7 +56,7 @@ class UpdateUserFormTests(TestCase):
         form_data = self.form_data.copy()
         form_data["password1"] = "short"
         form = UpdateUserForm(data=form_data, instance=self.user)
-        self.assertFalse(form.is_valid())
+        self.assertFalse(form.is_valid(), form.errors)
         self.assertIn("password1", form.errors)
 
     def test_form_save_with_new_password(self):
@@ -66,7 +66,7 @@ class UpdateUserFormTests(TestCase):
         form = UpdateUserForm(data=self.form_data, instance=self.user)
         if form.is_valid():
             user = form.save()
-            self.assertTrue(user.check_password("newpassword123"))
+            self.assertTrue(user.check_password("newpassword123"), form.errors)
 
     def test_form_does_not_change_password_if_not_provided(self):
         """
@@ -77,9 +77,9 @@ class UpdateUserFormTests(TestCase):
         if form.is_valid():
             user = form.save()
             self.assertTrue(
-                user.check_password("password123")
+                user.check_password("password123"), form.errors
             )  # Original password should still be valid
-            self.assertEqual(user.username, "updatedusername")
+            self.assertEqual(user.username, "updatedusername", form.errors)
 
 
 class UpdateProfileFormTests(TestCase):
@@ -135,10 +135,3 @@ class UpdateProfileFormTests(TestCase):
         form_data = {"avatar": invalid_file}
         form = UpdateProfileForm(data={}, files=form_data, instance=self.profile)
         self.assertFalse(form.is_valid(), form.errors)
-
-    def tearDown(self):
-        """
-        Clean up instances after each test method.
-        """
-        self.user.delete()
-        self.profile.delete()

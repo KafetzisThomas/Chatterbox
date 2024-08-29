@@ -69,3 +69,12 @@ class ProfileModelTests(TestCase):
         """
         profile, _ = Profile.objects.get_or_create(user=self.user)
         self.assertEqual(str(profile), self.user.username)
+
+    def tearDown(self):
+        """
+        Clean up files after each test method.
+        """
+        if Profile.objects.filter(user=self.user).exists():
+            profile = Profile.objects.get(user=self.user)
+            if profile.avatar and profile.avatar.name != "default.png":
+                profile.avatar.delete(save=False)
