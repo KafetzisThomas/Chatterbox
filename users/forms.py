@@ -42,9 +42,7 @@ class UpdateUserForm(forms.ModelForm):
 
 
 class UpdateProfileForm(forms.ModelForm):
-    avatar = forms.ImageField(
-        widget=forms.FileInput(attrs={"class": "form-control-file"}), required=False
-    )
+    avatar = forms.ImageField(widget=forms.ClearableFileInput(), required=False)
 
     class Meta:
         model = Profile
