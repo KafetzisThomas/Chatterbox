@@ -1,8 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from django.contrib.auth.models import User
-from .models import PrivateChat, Message
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -75,6 +73,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Retrieve a user from the database by their username.
         """
+        from django.contrib.auth.models import User
+
         return User.objects.get(username=username)
 
     @database_sync_to_async
@@ -82,6 +82,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Get or create a private chat between two users.
         """
+        from django.contrib.auth.models import User
+        from .models import PrivateChat
+
         user1 = User.objects.get(username=username1)
         user2 = User.objects.get(username=username2)
         chat, _ = (
@@ -96,6 +99,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Save message to the database.
         """
+        from .models import Message
+
         Message.objects.create(chat=chat, user=user, content=message)
 
     def create_group_name(self, username1, username2):
