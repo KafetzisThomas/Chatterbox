@@ -2,9 +2,6 @@
 # Exit on error
 set -o errexit
 
-# Install Graphviz (required for django-extensions)
-sudo apt-get update && sudo apt-get install graphviz graphviz-dev -y
-
 # Modify this line as needed for your package manager (pip, poetry, etc.)
 pip install -r requirements.txt
 
