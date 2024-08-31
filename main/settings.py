@@ -86,6 +86,8 @@ TEMPLATES = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = ["https://chatterbox-demo.onrender.com/"]
+
 WSGI_APPLICATION = "main.wsgi.application"
 
 ASGI_APPLICATION = "main.asgi.application"
