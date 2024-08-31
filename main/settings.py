@@ -32,7 +32,7 @@ DEBUG = os.getenv("DEBUG", "").lower() == "true"
 if DEBUG:
     ALLOWED_HOSTS = []
 else:
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = ["chatterbox-demo.onrender.com"]
 
 
 # Application definition
