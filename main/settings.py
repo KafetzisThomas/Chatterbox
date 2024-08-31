@@ -90,6 +90,17 @@ WSGI_APPLICATION = "main.wsgi.application"
 
 ASGI_APPLICATION = "main.asgi.application"
 
+# Channels
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
@@ -176,11 +187,3 @@ LOGOUT_REDIRECT_URL = "/"
 # Root directory for storing uploaded media files
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
-
-# Configure django channels to use an in-memory channel layer
-# Not suitable for production, use Redis or a db instead
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    }
-}
