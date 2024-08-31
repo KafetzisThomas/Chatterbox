@@ -25,7 +25,6 @@ psycopg2-binary==2.9.9
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pycparser==2.22
-pygraphviz==1.13
 pyOpenSSL==24.2.1
 python-dotenv==1.0.1
 redis==5.0.8
