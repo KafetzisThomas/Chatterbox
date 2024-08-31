@@ -29,11 +29,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "").lower() == "true"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "chatterbox-demo.onrender.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com"]
 
 CSRF_TRUSTED_ORIGINS = ["https://chatterbox-demo.onrender.com"]
 
-INTERNAL_IPS = ("127.0.0.1", "localhost:8000")
+INTERNAL_IPS = ("127.0.0.1", "localhost")
 
 # Application definition
 
