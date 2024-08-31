@@ -29,11 +29,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "").lower() == "true"
 
-if DEBUG:
-    ALLOWED_HOSTS = []
-else:
-    ALLOWED_HOSTS = ["chatterbox-demo.onrender.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "chatterbox-demo.onrender.com"]
 
+CSRF_TRUSTED_ORIGINS = ["https://chatterbox-demo.onrender.com"]
+
+INTERNAL_IPS = ("127.0.0.1", "localhost:8000")
 
 # Application definition
 
@@ -88,20 +88,25 @@ TEMPLATES = [
 
 CSRF_TRUSTED_ORIGINS = ["https://chatterbox-demo.onrender.com/"]
 
-WSGI_APPLICATION = "main.wsgi.application"
+# WSGI_APPLICATION = "main.wsgi.application"
 
 ASGI_APPLICATION = "main.asgi.application"
 
-# Channels
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+if DEBUG:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        }
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [(os.getenv("REDIS_URL"))],
+            },
         },
-    },
-}
-
+    }
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
@@ -120,16 +125,9 @@ if DEBUG:
     }
 else:
     # Production using PostgreSQL
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
-        }
-    }
+    import dj_database_url
+
+    DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
