@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UpdateUserForm, UpdateProfileForm, AvatarUploadForm
+from .forms import UpdateUserForm, UpdateAvatarForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 
@@ -30,17 +30,16 @@ def register(request):
 def account(request):
     if request.method == "POST":
         user_form = UpdateUserForm(instance=request.user, data=request.POST)
-        profile_form = UpdateProfileForm(
-            instance=request.user.profile, data=request.POST
+        profile_form = UpdateAvatarForm(
+            instance=request.user.profile, data=request.POST, files=request.FILES
         )
-        avatar_form = AvatarUploadForm(request.POST, request.FILES)
 
-        if user_form.is_valid() and profile_form.is_valid() and avatar_form.is_valid():
+        if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save(commit=False)
 
             # Read the avatar image as bytes and save to the Profile
-            avatar_file = avatar_form.cleaned_data.get("avatar")
+            avatar_file = profile_form.cleaned_data.get("avatar")
             if avatar_file:
                 avatar_bytes = avatar_file.read()
                 profile = request.user.profile
@@ -56,13 +55,11 @@ def account(request):
             return redirect("chatterbox:chat_list")
     else:
         user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
-        avatar_form = AvatarUploadForm()
+        profile_form = UpdateAvatarForm(instance=request.user.profile)
 
     context = {
         "user_form": user_form,
         "profile_form": profile_form,
-        "avatar_form": avatar_form,
     }
     return render(request, "users/account.html", context)
 
