@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -90,12 +91,14 @@ TEMPLATES = [
 ASGI_APPLICATION = "main.asgi.application"
 
 if DEBUG:
+    # Development using InMemoryChannelLayer
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels.layers.InMemoryChannelLayer",
         }
     }
 else:
+    # Production using RedisChannelLayer
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -122,9 +125,9 @@ if DEBUG:
     }
 else:
     # Production using PostgreSQL
-    import dj_database_url
-
-    DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
+    DATABASES = {
+        "default": dj_database_url.parse(os.getenv("DATABASE_URL")),
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -175,12 +178,6 @@ if not DEBUG:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# My settings
-
 # Login and logout settings
 LOGIN_URL = "users:login"
 LOGOUT_REDIRECT_URL = "/"
-
-# Root directory for storing uploaded media files
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
