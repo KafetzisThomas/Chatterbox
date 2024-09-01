@@ -1,4 +1,7 @@
 {% extends "chatterbox/base.html" %}
+{% load custom_filters %}
+{% load static %}
+
 {% block title %}Chats{% endblock title %}
 
 {% block content %}
@@ -24,7 +27,11 @@
                                     {% if request.user != other_user %}
                                         <li class="p-3 border-bottom">
                                             <a href="{% url 'chatterbox:chat' username=request.user.username other_username=other_user.username %}" class="d-flex align-items-center text-decoration-none text-dark">
-                                                <img src="{{ other_user.profile.avatar.url }}" alt="avatar1" class="rounded-circle me-3" width="60">
+                                                {% if other_user.profile.avatar %}
+                                                    <img src="data:image/png;base64,{{ other_user.profile.avatar|base64 }}" alt="avatar1" class="rounded-circle me-3" width="60"/>
+                                                {% else %}
+                                                    <img src="{% static 'default.png' %}" alt="avatar1" class="rounded-circle me-3" width="60"/>
+                                                {% endif %}
                                                 <div class="flex-grow-1">
                                                     <p class="fw-bold mb-0">{{ other_user.username }}</p>
                                                     <p class="small text-muted mb-0">

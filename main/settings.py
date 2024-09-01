@@ -30,9 +30,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "").lower() == "true"
 
 ALLOWED_HOSTS = ["localhost", "chatterbox-demo.onrender.com"]
+
 CSRF_TRUSTED_ORIGINS = ["https://chatterbox-demo.onrender.com"]
-# CSRF_ALLOWED_ORIGINS = ["https://chatterbox-demo.onrender.com"]
-# CORS_ORIGINS_WHITELIST = ["https://chatterbox-demo.onrender.com"]
 
 # Application definition
 

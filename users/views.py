@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UpdateUserForm, UpdateProfileForm
+from .forms import UpdateUserForm, UpdateProfileForm, AvatarUploadForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 
@@ -31,14 +31,25 @@ def account(request):
     if request.method == "POST":
         user_form = UpdateUserForm(instance=request.user, data=request.POST)
         profile_form = UpdateProfileForm(
-            request.POST, request.FILES, instance=request.user.profile
+            instance=request.user.profile, data=request.POST
         )
-        if user_form.is_valid() and profile_form.is_valid():
+        avatar_form = AvatarUploadForm(request.POST, request.FILES)
+
+        if user_form.is_valid() and profile_form.is_valid() and avatar_form.is_valid():
             user_form.save()
-            profile_form.save()
-            update_session_auth_hash(
-                request, request.user
-            )  # Important for keeping the user logged in
+            profile_form.save(commit=False)
+
+            # Read the avatar image as bytes and save to the Profile
+            avatar_file = avatar_form.cleaned_data.get("avatar")
+            if avatar_file:
+                avatar_bytes = avatar_file.read()
+                profile = request.user.profile
+                profile.avatar = avatar_bytes
+                profile.save()
+            else:
+                profile_form.save()  # Save without changes if no new avatar
+
+            update_session_auth_hash(request, request.user)  # Keep user logged in
             messages.success(
                 request, "Your account settings were successfully updated!"
             )
@@ -46,8 +57,13 @@ def account(request):
     else:
         user_form = UpdateUserForm(instance=request.user)
         profile_form = UpdateProfileForm(instance=request.user.profile)
+        avatar_form = AvatarUploadForm()
 
-    context = {"user_form": user_form, "profile_form": profile_form}
+    context = {
+        "user_form": user_form,
+        "profile_form": profile_form,
+        "avatar_form": avatar_form,
+    }
     return render(request, "users/account.html", context)
 
 
