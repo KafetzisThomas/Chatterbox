@@ -9,7 +9,7 @@ from PIL import Image
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
-from ..forms import UpdateUserForm, UpdateProfileForm
+from ..forms import UpdateUserForm, UpdateAvatarForm
 from ..models import Profile
 
 
@@ -82,9 +82,9 @@ class UpdateUserFormTests(TestCase):
             self.assertEqual(user.username, "updatedusername", form.errors)
 
 
-class UpdateProfileFormTests(TestCase):
+class UpdateAvatarFormTests(TestCase):
     """
-    Test suite for the UpdateProfileForm.
+    Test suite for the UpdateAvatarForm.
     """
 
     def setUp(self):
@@ -112,14 +112,14 @@ class UpdateProfileFormTests(TestCase):
         )
 
         form_data = {"avatar": image_file}
-        form = UpdateProfileForm(data={}, files=form_data, instance=self.profile)
+        form = UpdateAvatarForm(data={}, files=form_data, instance=self.profile)
         self.assertTrue(form.is_valid(), form.errors)
 
     def test_form_with_no_data(self):
         """
         Test that the form is valid when no data is provided, even when no avatar is uploaded.
         """
-        form = UpdateProfileForm(data={}, files={}, instance=self.profile)
+        form = UpdateAvatarForm(data={}, files={}, instance=self.profile)
         self.assertTrue(form.is_valid(), form.errors)
 
     def test_form_with_invalid_file_type(self):
@@ -133,5 +133,5 @@ class UpdateProfileFormTests(TestCase):
         )
 
         form_data = {"avatar": invalid_file}
-        form = UpdateProfileForm(data={}, files=form_data, instance=self.profile)
+        form = UpdateAvatarForm(data={}, files=form_data, instance=self.profile)
         self.assertFalse(form.is_valid(), form.errors)
