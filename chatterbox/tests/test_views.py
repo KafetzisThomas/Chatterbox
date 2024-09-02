@@ -297,3 +297,62 @@ class ChatViewTests(TestCase):
             user1=self.user1, user2=self.user3
         ).first()
         self.assertIsNotNone(new_chat)
+
+
+class DeleteChatViewTests(TestCase):
+    """
+    Test case for the delete_chat view.
+    """
+
+    def setUp(self):
+        """
+        Set up the test environment by creating users, chats, and messages.
+        """
+        self.user1 = User.objects.create_user(username="user1", password="password123")
+        self.user2 = User.objects.create_user(username="user2", password="password123")
+        self.client.login(username="user1", password="password123")
+
+        # Create chats
+        self.chat1 = PrivateChat.objects.create(user1=self.user1, user2=self.user2)
+
+        # Create messages
+        self.message1 = Message.objects.create(
+            chat=self.chat1, user=self.user1, content="Hello!", timestamp=timezone.now()
+        )
+        self.message2 = Message.objects.create(
+            chat=self.chat1, user=self.user2, content="Hi!", timestamp=timezone.now()
+        )
+        # URL for deleting the chat, using the usernames as parameters
+        self.url = reverse(
+            "chatterbox:delete_chat",
+            kwargs={
+                "username": self.user1.username,
+                "other_username": self.user2.username,
+            },
+        )
+
+    def test_delete_chat_view_logged_in(self):
+        """
+        Test deleting the chat with a POST request.
+        """
+        response = self.client.post(self.url, follow=True)
+
+        # Check that the chat is deleted
+        self.assertFalse(
+            PrivateChat.objects.filter(user1=self.user1, user2=self.user2).exists()
+        )
+        self.assertRedirects(response, reverse("chatterbox:chat_list"))
+
+    def test_delete_chat_view_not_logged_in(self):
+        """
+        Test accessing the view when not logged in.
+        """
+        self.client.logout()
+        response = self.client.post(self.url, follow=True)
+        login_url = reverse("users:login")
+        self.assertRedirects(response, f"{login_url}?next={self.url}")
+
+        # Ensure the chat is not deleted
+        self.assertTrue(
+            PrivateChat.objects.filter(user1=self.user1, user2=self.user2).exists()
+        )

@@ -96,3 +96,12 @@ def chat(request, username, other_username):
         "other_user": user2,
     }
     return render(request, "chatterbox/chat.html", context)
+
+
+@login_required
+def delete_chat(request, username, other_username):
+    user1 = User.objects.get(username=username)
+    user2 = User.objects.get(username=other_username)
+    PrivateChat.objects.get(user1=user1, user2=user2).delete()
+    messages.error(request, "Chat has been successfully deleted!")
+    return redirect("chatterbox:chat_list")

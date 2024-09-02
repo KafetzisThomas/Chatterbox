@@ -11,4 +11,10 @@ urlpatterns = [
     path("create_chat/", views.create_chat, name="create_chat"),
     # Private chat page
     path("chat/<str:username>/<str:other_username>/", views.chat, name="chat"),
+    # Delete chat page
+    path(
+        "chat/<str:username>/<str:other_username>/delete_chat/",
+        views.delete_chat,
+        name="delete_chat",
+    ),
 ]
