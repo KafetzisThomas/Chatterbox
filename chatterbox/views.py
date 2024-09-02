@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import PrivateChat, Message
 from .forms import PrivateChatForm
@@ -32,10 +33,20 @@ def create_chat(request):
         form = PrivateChatForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data["username"]
-            other_user = get_object_or_404(User, username=username)
+            other_user = User.objects.filter(username=username).first()
+
+            if not other_user:
+                messages.success(
+                    request,
+                    "The username you entered does not exist. Please try again.",
+                )
+                return redirect("chatterbox:create_chat")
 
             if other_user == request.user:
-                return redirect("chatterbox:chat_list")
+                messages.success(
+                    request, "You cannot start a chat with yourself. Please try again."
+                )
+                return redirect("chatterbox:create_chat")
 
             # Fetch or create the chat
             chat, _ = (
