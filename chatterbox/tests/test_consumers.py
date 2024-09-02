@@ -1,9 +1,28 @@
+import os
 from channels.testing import WebsocketCommunicator
 from django.test import TransactionTestCase
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.db import database_sync_to_async
+from django.core.asgi import get_asgi_application
 from django.contrib.auth.models import User
 from ..models import PrivateChat, Message
-from main.asgi import application
+
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "main.settings")
+django_asgi_app = get_asgi_application()
+
+import chatterbox.routing
+
+# Simulate the ASGI application for testing WebSocket
+application = ProtocolTypeRouter(
+    {
+        "http": django_asgi_app,
+        "websocket": AuthMiddlewareStack(
+            URLRouter(chatterbox.routing.websocket_urlpatterns)
+        ),
+    }
+)
 
 
 class ChatConsumerTests(TransactionTestCase):

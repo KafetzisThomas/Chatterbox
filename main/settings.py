@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -29,11 +30,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "").lower() == "true"
 
-if DEBUG:
-    ALLOWED_HOSTS = []
-else:
-    ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "chatterbox-demo.onrender.com"]
 
+CSRF_TRUSTED_ORIGINS = ["https://chatterbox-demo.onrender.com"]
 
 # Application definition
 
@@ -86,9 +85,28 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "main.wsgi.application"
+
+# WSGI_APPLICATION = "main.wsgi.application"
 
 ASGI_APPLICATION = "main.asgi.application"
+
+if DEBUG:
+    # Development using InMemoryChannelLayer
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        }
+    }
+else:
+    # Production using RedisChannelLayer
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [(os.getenv("REDIS_URL"))],
+            },
+        },
+    }
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
@@ -108,14 +126,7 @@ if DEBUG:
 else:
     # Production using PostgreSQL
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
-        }
+        "default": dj_database_url.parse(os.getenv("DATABASE_URL")),
     }
 
 # Password validation
@@ -167,20 +178,6 @@ if not DEBUG:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# My settings
-
 # Login and logout settings
 LOGIN_URL = "users:login"
 LOGOUT_REDIRECT_URL = "/"
-
-# Root directory for storing uploaded media files
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
-
-# Configure django channels to use an in-memory channel layer
-# Not suitable for production, use Redis or a db instead
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    }
-}

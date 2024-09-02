@@ -42,8 +42,8 @@ class UpdateUserForm(forms.ModelForm):
 
 
 class UpdateProfileForm(forms.ModelForm):
-    avatar = forms.ImageField(widget=forms.ClearableFileInput(), required=False)
+    avatar = forms.ImageField(required=False)
 
     class Meta:
         model = Profile
-        fields = ["avatar"]
+        fields = []

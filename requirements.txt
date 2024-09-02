@@ -1,10 +1,12 @@
 asgiref==3.8.1
+async-timeout==4.0.3
 attrs==24.2.0
 autobahn==24.4.2
 Automat==24.8.0
 Brotli==1.1.0
 cffi==1.17.0
 channels==4.1.0
+channels-redis==4.2.0
 constantly==23.10.4
 crispy-bootstrap5==2024.2
 cryptography==43.0.0
@@ -17,6 +19,7 @@ django-extensions==3.2.3
 hyperlink==21.0.0
 idna==3.7
 incremental==24.7.2
+msgpack==1.0.8
 pillow==10.4.0
 psycopg2-binary==2.9.9
 pyasn1==0.6.0
@@ -24,6 +27,7 @@ pyasn1_modules==0.4.0
 pycparser==2.22
 pyOpenSSL==24.2.1
 python-dotenv==1.0.1
+redis==5.0.8
 service-identity==24.1.0
 sqlparse==0.5.1
 tomli==2.0.1

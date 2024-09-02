@@ -1,5 +1,7 @@
 {% extends "chatterbox/base.html" %}
 {% load crispy_forms_tags %}
+{% load custom_filters %}
+{% load static %}
 
 {% block title %}Account{% endblock title %}
 
@@ -13,7 +15,11 @@
                     <!-- profile picture -->
                     <div class="text-center mb-4">
                         <div class="position-relative d-inline-block">
-                            <img class="rounded-circle border border-secondary shadow-sm mb-2" src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                            {% if user.profile.avatar %}
+                                <img class="rounded-circle border border-secondary shadow-sm mb-2" src="data:image/png;base64,{{ user.profile.avatar|base64 }}" alt="{{ user.username }}'s avatar" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                            {% else %}
+                                <img class="rounded-circle border border-secondary shadow-sm mb-2" src="{% static 'default.png' %}" alt="{{ user.username }}'s avatar" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                            {% endif %}
                         </div>
                     </div>
 

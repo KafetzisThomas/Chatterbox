@@ -1,4 +1,7 @@
 {% extends "chatterbox/base.html" %}
+{% load custom_filters %}
+{% load static %}
+
 {% block title %}{{ other_user.username }}{% endblock title %}
 
 {% block content %}
@@ -35,7 +38,11 @@
 
                         <!-- message input area, stays at the bottom -->
                         <div class="d-flex align-items-center mt-3">
-                            <img src="{{ current_user.profile.avatar.url }}" id="avatar" alt="avatar" class="rounded-circle">
+                            {% if current_user.profile.avatar %}
+                                <img src="data:image/png;base64,{{ current_user.profile.avatar|base64 }}" id="avatar" alt="avatar" class="rounded-circle"/>
+                            {% else %}
+                                <img src="{% static 'default.png' %}" id="avatar" alt="avatar" class="rounded-circle"/>
+                            {% endif %}
                             <input type="text" class="form-control form-control-lg ms-2" id="message_send_input" placeholder="Type message" autofocus>
                             <button id="message_send_button" class="btn btn-primary ms-2"><i class="bi bi-send"></i></button>
                         </div>
