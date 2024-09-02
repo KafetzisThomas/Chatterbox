@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UpdateUserForm, UpdateAvatarForm
+from .forms import UpdateUserForm, UpdateProfileForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 
@@ -30,7 +30,7 @@ def register(request):
 def account(request):
     if request.method == "POST":
         user_form = UpdateUserForm(instance=request.user, data=request.POST)
-        profile_form = UpdateAvatarForm(
+        profile_form = UpdateProfileForm(
             instance=request.user.profile, data=request.POST, files=request.FILES
         )
 
@@ -45,8 +45,6 @@ def account(request):
                 profile = request.user.profile
                 profile.avatar = avatar_bytes
                 profile.save()
-            else:
-                profile_form.save()  # Save without changes if no new avatar
 
             update_session_auth_hash(request, request.user)  # Keep user logged in
             messages.success(
@@ -55,7 +53,7 @@ def account(request):
             return redirect("chatterbox:chat_list")
     else:
         user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateAvatarForm(instance=request.user.profile)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
 
     context = {
         "user_form": user_form,

@@ -41,7 +41,7 @@ class UpdateUserForm(forms.ModelForm):
         return user
 
 
-class UpdateAvatarForm(forms.ModelForm):
+class UpdateProfileForm(forms.ModelForm):
     avatar = forms.ImageField(required=False)
 
     class Meta:
