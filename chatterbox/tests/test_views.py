@@ -147,9 +147,9 @@ class CreateChatViewTests(TestCase):
         """
         form_data = {"username": "user1"}
         response = self.client.post(reverse("chatterbox:create_chat"), data=form_data)
-        self.assertEqual(response.status_code, 302)  # Expect redirect to chat_list
+        self.assertEqual(response.status_code, 302)  # Expect redirect to create_chat
 
-        expected_url = reverse("chatterbox:chat_list")
+        expected_url = reverse("chatterbox:create_chat")
         self.assertRedirects(response, expected_url)
 
     def test_create_chat_invalid_form(self):
@@ -167,7 +167,12 @@ class CreateChatViewTests(TestCase):
         """
         form_data = {"username": "nonexistentuser"}
         response = self.client.post(reverse("chatterbox:create_chat"), data=form_data)
-        self.assertEqual(response.status_code, 404)  # Expect 404 if user does not exist
+        self.assertEqual(
+            response.status_code, 302
+        )  # Expect redirect if user does not exist
+
+        expected_url = reverse("chatterbox:create_chat")
+        self.assertRedirects(response, expected_url)
 
     def test_get_create_chat_view(self):
         """
