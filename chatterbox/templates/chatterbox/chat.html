@@ -1,5 +1,6 @@
 {% extends "chatterbox/base.html" %}
-{% load custom_filters %}
+{% load chatterbox_filters %}
+{% load user_filters %}
 {% load static %}
 
 {% block title %}{{ other_user.username }}{% endblock title %}
@@ -26,7 +27,7 @@
                                     <!-- message from the signed-in user (align right) -->
                                     <div class="d-flex flex-row justify-content-end mb-3">
                                         <div>
-                                            <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content }}</p>
+                                            <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content|make_links|safe }}</p>
                                             <p class="small me-3 mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
                                         </div>
                                     </div>
@@ -34,7 +35,7 @@
                                     <!-- message from other users (align left) -->
                                     <div class="d-flex flex-row justify-content-start mb-3">
                                         <div>
-                                            <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content }}</p>
+                                            <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content|make_links|safe }}</p>
                                             <p class="small ms-3 mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
                                         </div>
                                     </div>
@@ -104,13 +105,14 @@
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const div = document.createElement("div");
+            const messageContent = convertLinks(data.message);
 
             if (data.username === "{{ user.username }}") {
                 div.classList.add("d-flex", "flex-row", "justify-content-end", "mb-3");
 
                 div.innerHTML = `
                     <div>
-                        <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">${data.message}</p>
+                        <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">${messageContent}</p>
                         <p class="small me-3 mb-0 rounded-3 text-muted text-end">Just now</p>
                     </div>
                 `;
@@ -119,7 +121,7 @@
 
                 div.innerHTML = `
                     <div>
-                        <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">${data.message}</p>
+                        <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">${messageContent}</p>
                         <p class="small ms-3 mb-0 rounded-3 text-muted">Just now</p>
                     </div>
                 `;
@@ -128,6 +130,12 @@
             document.querySelector("#messages-container").appendChild(div);
             document.querySelector("#messages-container").scrollTop = document.querySelector("#messages-container").scrollHeight;
         };
+
+        // Convert URLs into clickable links
+        function convertLinks(text) {
+            const urlPattern = /((http|https):\/\/[^\s]+)/g;
+            return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-white">$1</a>');
+        }
     </script>
 {% endblock content %}
 

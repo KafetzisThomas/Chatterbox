@@ -18,7 +18,8 @@
     - [X] Text
     - [ ] Files
     - [ ] Images
-- [ ] Detect links and add an anchor tag to them
+- [X] Allow users to delete entire conversations
+- [x] Detect links and add an anchor tag to them
 
 ## Purpose
 
