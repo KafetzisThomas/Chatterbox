@@ -27,15 +27,25 @@
                                     <!-- message from the signed-in user (align right) -->
                                     <div class="d-flex flex-row justify-content-end mb-3">
                                         <div>
-                                            <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content|make_links|safe }}</p>
+                                            {% if message.content %}
+                                                <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">{{ message.content|make_links|safe }}</p>
+                                            {% endif %}
+                                            {% if message.image %}
+                                                <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
+                                            {% endif %}
                                             <p class="small me-3 mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
                                         </div>
                                     </div>
                                 {% else %}
-                                    <!-- message from other users (align left) -->
+                                    <!-- message from the other user (align left) -->
                                     <div class="d-flex flex-row justify-content-start mb-3">
                                         <div>
-                                            <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content|make_links|safe }}</p>
+                                            {% if message.content %}
+                                                <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">{{ message.content|make_links|safe }}</p>
+                                            {% endif %}
+                                            {% if message.image %}
+                                                <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
+                                            {% endif %}
                                             <p class="small ms-3 mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
                                         </div>
                                     </div>
@@ -52,7 +62,9 @@
                             {% else %}
                                 <img src="{% static 'default.png' %}" id="avatar" alt="avatar" class="rounded-circle"/>
                             {% endif %}
-                            <input type="text" class="form-control form-control-lg ms-2" id="message_send_input" placeholder="Type message" autofocus>
+                            <input type="file" id="image_input" class="form-control-file ms-2" accept="image/*" style="display: none;"/>
+                            <button id="image_send_button" class="btn btn-secondary ms-2"><i class="bi bi-image"></i></button>
+                            <input type="text" id="message_send_input" class="form-control form-control-lg ms-2" placeholder="Type message" autofocus>
                             <button id="message_send_button" class="btn btn-primary ms-2"><i class="bi bi-send"></i></button>
                         </div>
                     </div>
@@ -94,25 +106,52 @@
             }
         };
 
+        // Handle sending text messages
         document.querySelector("#message_send_button").onclick = function (e) {
             const messageInput = document.querySelector("#message_send_input").value.trim();
             if (messageInput) {
-                chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ user.username }}" }));
+                chatSocket.send(JSON.stringify({
+                    message: messageInput,
+                    username: "{{ user.username }}",
+                }));
                 document.querySelector("#message_send_input").value = "";
             }
         };
 
+        // Handle sending images
+        document.querySelector("#image_send_button").onclick = function (e) {
+            document.querySelector("#image_input").click();
+        };
+
+        document.querySelector("#image_input").onchange = function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    const base64String = reader.result.split(',')[1];  // Get base64 string
+                    chatSocket.send(JSON.stringify({
+                        image: base64String,
+                        username: "{{ user.username }}",
+                    }));
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Handle incoming messages
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const div = document.createElement("div");
             const messageContent = convertLinks(data.message);
+            const imageContent = data.image ? `<img src="data:image/png;base64,${data.image}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>` : '';
 
             if (data.username === "{{ user.username }}") {
                 div.classList.add("d-flex", "flex-row", "justify-content-end", "mb-3");
 
                 div.innerHTML = `
                     <div>
-                        <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">${messageContent}</p>
+                        ${messageContent ? `<p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white">${messageContent}</p>` : ''}
+                        ${imageContent}
                         <p class="small me-3 mb-0 rounded-3 text-muted text-end">Just now</p>
                     </div>
                 `;
@@ -121,7 +160,8 @@
 
                 div.innerHTML = `
                     <div>
-                        <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">${messageContent}</p>
+                        ${messageContent ? `<p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white">${messageContent}</p>` : ''}
+                        ${imageContent}
                         <p class="small ms-3 mb-0 rounded-3 text-muted">Just now</p>
                     </div>
                 `;
