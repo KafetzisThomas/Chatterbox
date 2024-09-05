@@ -110,6 +110,7 @@ def delete_chat(request, username, other_username):
         messages.error(request, "One or both users do not exist.")
     except PrivateChat.DoesNotExist:
         messages.error(request, "Chat does not exist.")
+        print(f"Chat between {username} and {other_username} does not exist.")
     except Exception as err:
         messages.error(request, "An unexpected error occurred.")
         print(f"Unexpected error: {err}")
