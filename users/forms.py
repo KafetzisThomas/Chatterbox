@@ -1,11 +1,21 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from .models import Profile
 
 
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+
 class UpdateUserForm(forms.ModelForm):
+    email = forms.EmailField(
+        label="Email Address", widget=forms.EmailInput, required=True
+    )
     password1 = forms.CharField(
         label="New Password", widget=forms.PasswordInput, required=False
     )
@@ -15,7 +25,7 @@ class UpdateUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("username", "password1", "password2")
+        fields = ("username", "email", "password1", "password2")
 
     def clean(self):
         cleaned_data = super().clean()
@@ -33,6 +43,7 @@ class UpdateUserForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password1")
         if password:
             user.set_password(password)
