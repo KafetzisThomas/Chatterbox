@@ -1,4 +1,7 @@
 import os
+import io
+import base64
+from PIL import Image
 from channels.testing import WebsocketCommunicator
 from django.test import TransactionTestCase
 from channels.auth import AuthMiddlewareStack
@@ -82,6 +85,34 @@ class ChatConsumerTests(TransactionTestCase):
 
         await self.disconnect_communicator(communicator)
 
+    async def test_receive_image(self):
+        """
+        Test that an image sent to the WebSocket is correctly received and processed.
+        """
+        communicator = WebsocketCommunicator(application, f"/ws/chat/user1/user2/")
+        await self.connect_communicator(communicator)
+
+        # Create an image and convert it to base64
+        image = Image.new("RGB", (500, 500), "white")
+        byte_io = io.BytesIO()
+        image.save(byte_io, format="JPEG")
+        byte_io.seek(0)
+        image_data = base64.b64encode(byte_io.read()).decode("utf-8")
+
+        message = {"message": "", "username": "user1", "image": image_data}
+
+        # Send an image from the client to the WebSocket
+        await communicator.send_json_to(message)
+
+        # Receive the image from the WebSocket
+        response = await communicator.receive_json_from()
+
+        self.assertEqual(response["username"], message["username"])
+        self.assertEqual(response["message"], message["message"])
+        self.assertEqual(response["image"], message["image"])
+
+        await self.disconnect_communicator(communicator)
+
     async def test_save_message_to_database(self):
         """
         Test that a message sent through the WebSocket is saved to the database.
@@ -97,6 +128,33 @@ class ChatConsumerTests(TransactionTestCase):
         # Check if the message is saved in the database
         saved_message = await database_sync_to_async(Message.objects.filter)(
             chat=self.chat, user=self.user1, content="Hello, World!"
+        )
+        self.assertTrue(await database_sync_to_async(saved_message.exists)())
+
+        await self.disconnect_communicator(communicator)
+
+    async def test_save_image_to_database(self):
+        """
+        Test that an image sent through the WebSocket is saved to the database.
+        """
+        communicator = WebsocketCommunicator(application, f"/ws/chat/user1/user2/")
+        await self.connect_communicator(communicator)
+
+        # Create an image and convert it to base64
+        image = Image.new("RGB", (500, 500), "white")
+        byte_io = io.BytesIO()
+        image.save(byte_io, format="JPEG")
+        byte_io.seek(0)
+        image_data = base64.b64encode(byte_io.read()).decode("utf-8")
+
+        message = {"message": "", "username": "user1", "image": image_data}
+
+        await communicator.send_json_to(message)
+        await communicator.receive_json_from()
+
+        # Check if the image is saved in the database
+        saved_message = await database_sync_to_async(Message.objects.filter)(
+            chat=self.chat, user=self.user1, image__isnull=False
         )
         self.assertTrue(await database_sync_to_async(saved_message.exists)())
 
