@@ -17,7 +17,7 @@
 - [X] Users can send:
     - [X] Text
     - [ ] Files
-    - [ ] Images
+    - [X] Images
 - [X] Allow users to delete entire conversations
 - [x] Detect links and add an anchor tag to them
 
@@ -34,7 +34,7 @@ If you find this project interesting, helpful, or inspiring, please consider giv
 ## Django Models
 Here is a graphical representation of the Django models used in this project:
 
-<div align="center"><img src="https://github.com/user-attachments/assets/d1e53a4d-eafa-48d6-8855-5311edc2465b" alt="Django Models Graph" width="500"/></div>
+<div align="center"><img src="https://github.com/user-attachments/assets/3e8d8f5a-7d23-496d-bf96-b6606ea045cc" alt="Django Models Graph" width="500"/></div>
 
 ## Setup for Local Development
 
