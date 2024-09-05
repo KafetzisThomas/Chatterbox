@@ -1,4 +1,5 @@
 import json
+import base64
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 
@@ -40,20 +41,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
         Handle incoming WebSocket messages from clients.
         """
         data = json.loads(text_data)  # Parse the JSON data
-        message = data["message"]
+        message = data.get("message", "")
+        image_data = data.get("image", "")
         username = data["username"]
-
-        # Get the user and save the message to the database
         user = await self.get_user(username)
-        await self.save_message(self.chat, user, message)
+
+        # Decode the image if it's present
+        image = base64.b64decode(image_data) if image_data else None
+
+        # Save the message to the database
+        await self.save_message(self.chat, user, message, image)
 
         # Display the message to the WebSocket group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                "type": "send_message",  # Specify the type of event to be handled
+                "type": "send_message",
                 "message": message,
                 "username": username,
+                "image": image_data,  # Send the base64 image data to clients
             },
         )
 
@@ -63,9 +69,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         message = event["message"]
         username = event["username"]
+        image = event["image"]
 
         await self.send(
-            text_data=json.dumps({"message": message, "username": username})
+            text_data=json.dumps(
+                {
+                    "username": username,
+                    "message": message,
+                    "image": image,
+                }
+            )
         )
 
     @database_sync_to_async
@@ -95,13 +108,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return chat
 
     @database_sync_to_async
-    def save_message(self, chat, user, message):
+    def save_message(self, chat, user, message, image):
         """
         Save message to the database.
         """
         from .models import Message
 
-        Message.objects.create(chat=chat, user=user, content=message)
+        Message.objects.create(chat=chat, user=user, content=message, image=image)
 
     def create_group_name(self, username1, username2):
         """

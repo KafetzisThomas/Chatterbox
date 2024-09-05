@@ -20,7 +20,8 @@ class Message(models.Model):
         PrivateChat, on_delete=models.CASCADE, related_name="messages"
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(blank=True)
+    image = models.BinaryField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def get_time_diff(self):
@@ -39,4 +40,6 @@ class Message(models.Model):
                 return f"{int(timediff.total_seconds() // 86400)} days ago"
 
     def __str__(self):
-        return f"{self.user.username}: {self.content[:20]}..."
+        if self.content:
+            return f"{self.user.username}: {self.content[:20]}..."
+        return f"{self.user.username} sent an image."
