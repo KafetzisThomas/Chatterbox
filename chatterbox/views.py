@@ -100,8 +100,23 @@ def chat(request, username, other_username):
 
 @login_required
 def delete_chat(request, username, other_username):
-    user1 = User.objects.get(username=username)
-    user2 = User.objects.get(username=other_username)
-    PrivateChat.objects.get(user1=user1, user2=user2).delete()
-    messages.error(request, "Chat has been successfully deleted!")
+    try:
+        user1 = User.objects.get(username=username)
+        user2 = User.objects.get(username=other_username)
+        # Determine the correct order for user1 and user2 in the chat
+        chat = (
+            PrivateChat.objects.get(user1=user1, user2=user2)
+            if user1.id < user2.id
+            else PrivateChat.objects.get(user1=user2, user2=user1)
+        )
+        chat.delete()
+        messages.success(request, "Chat has been successfully deleted!")
+    except User.DoesNotExist:
+        messages.error(request, "One or both users do not exist.")
+    except PrivateChat.DoesNotExist:
+        messages.error(request, "Chat does not exist.")
+    except Exception as err:
+        messages.error(request, "An unexpected error occurred.")
+        print(f"Unexpected error: {err}")
+
     return redirect("chatterbox:chat_list")
