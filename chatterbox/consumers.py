@@ -52,20 +52,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Decode the image if it's present
         image = base64.b64decode(image_data) if image_data else None
 
-        # Save the message to the database
-        await self.save_message(self.chat, user, message, image)
-
         # Check for mention and send an email if necessary
         if message and "@" in message:
             mentioned_username = self.extract_mentioned_username(message)
             if mentioned_username:
-                mentioned_user = await self.get_user(mentioned_username)
-                if mentioned_user and mentioned_user != user:
-                    await sync_to_async(send_ping_notification)(
-                        current_user=user,
-                        mentioned_user=mentioned_user,
-                        message=message,
-                    )
+                try:
+                    mentioned_user = await self.get_user(mentioned_username)
+                    # Check if the mentioned user exists and is different from the sender
+                    if mentioned_user and mentioned_user != user:
+                        await sync_to_async(send_ping_notification)(
+                            current_user=user,
+                            mentioned_user=mentioned_user,
+                            message=message,
+                        )
+                except User.DoesNotExist:
+                    return None  # Don't store the message
+
+        # Save the message to the database
+        await self.save_message(self.chat, user, message, image)
 
         # Display the message to the WebSocket group
         await self.channel_layer.group_send(
