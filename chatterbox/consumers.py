@@ -2,6 +2,9 @@ import json
 import base64
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from asgiref.sync import sync_to_async
+from django.contrib.auth.models import User
+from .utils import send_ping_notification
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -49,6 +52,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Decode the image if it's present
         image = base64.b64decode(image_data) if image_data else None
 
+        # Check for mention and send an email if necessary
+        if message and "@" in message:
+            mentioned_username = self.extract_mentioned_username(message)
+            if mentioned_username:
+                try:
+                    mentioned_user = await self.get_user(mentioned_username)
+                    # Check if the mentioned user exists and is different from the sender
+                    if mentioned_user and mentioned_user != user:
+                        await sync_to_async(send_ping_notification)(
+                            current_user=user,
+                            mentioned_user=mentioned_user,
+                            message=message,
+                        )
+                except User.DoesNotExist:
+                    return None  # Don't store the message
+
         # Save the message to the database
         await self.save_message(self.chat, user, message, image)
 
@@ -86,8 +105,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Retrieve a user from the database by their username.
         """
-        from django.contrib.auth.models import User
-
         return User.objects.get(username=username)
 
     @database_sync_to_async
@@ -95,7 +112,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Get or create a private chat between two users.
         """
-        from django.contrib.auth.models import User
         from .models import PrivateChat
 
         user1 = User.objects.get(username=username1)
@@ -125,3 +141,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if username1 < username2
             else f"{username2}_{username1}"
         )
+
+    def extract_mentioned_username(self, message):
+        """
+        Extract the mentioned username from the message.
+        """
+        if "@" in message:
+            # Extract the username after '@'
+            parts = message.split("@")
+            if len(parts) > 1:
+                # Ensure the username doesn't have trailing spaces
+                mentioned_username = parts[1].split()[0]
+                return mentioned_username.strip()
+        return None

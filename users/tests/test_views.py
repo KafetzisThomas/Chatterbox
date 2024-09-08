@@ -8,8 +8,7 @@ from PIL import Image
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.contrib.auth.forms import UserCreationForm
-from ..forms import UpdateUserForm, UpdateProfileForm
+from ..forms import CustomUserCreationForm, UpdateUserForm, UpdateProfileForm
 from django.contrib.auth.models import User
 from ..models import Profile
 
@@ -32,7 +31,7 @@ class RegisterViewTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "registration/register.html")
-        self.assertIsInstance(response.context["form"], UserCreationForm)
+        self.assertIsInstance(response.context["form"], CustomUserCreationForm)
 
     def test_register_view_post_valid_data(self):
         """
@@ -40,6 +39,7 @@ class RegisterViewTests(TestCase):
         """
         valid_data = {
             "username": "testuser",
+            "email": "newuser@example.com",
             "password1": "strongpassword123",
             "password2": "strongpassword123",
         }
@@ -59,6 +59,7 @@ class RegisterViewTests(TestCase):
         """
         invalid_data = {
             "username": "testuser",
+            "email": "newuser@example.com",
             "password1": "strongpassword123",
             "password2": "differentpassword123",  # Different password confirmation
         }
@@ -70,7 +71,7 @@ class RegisterViewTests(TestCase):
         # Check response
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "registration/register.html")
-        self.assertIsInstance(response.context["form"], UserCreationForm)
+        self.assertIsInstance(response.context["form"], CustomUserCreationForm)
         self.assertTrue(response.context["form"].errors)
 
 
@@ -84,7 +85,7 @@ class AccountViewTests(TestCase):
         Set up the test environment.
         """
         self.user = User.objects.create_user(
-            username="testuser", password="testpassword"
+            username="testuser", email="testuser@example.com", password="testpassword"
         )
         self.profile, _ = Profile.objects.get_or_create(user=self.user)
         self.client.login(username="testuser", password="testpassword")
@@ -108,6 +109,7 @@ class AccountViewTests(TestCase):
         """
         valid_data = {
             "username": "updateduser",
+            "email": "updatedemail@example.com",
             "password1": "newstrongpassword123",
             "password2": "newstrongpassword123",
         }
@@ -119,6 +121,7 @@ class AccountViewTests(TestCase):
 
         # Check if user details are updated
         self.assertEqual(self.user.username, "updateduser")
+        self.assertEqual(self.user.email, "updatedemail@example.com")
         self.assertTrue(self.user.check_password("newstrongpassword123"))
 
         # Check response and redirect
@@ -127,10 +130,11 @@ class AccountViewTests(TestCase):
 
     def test_account_view_post_invalid_data(self):
         """
-        Test handling of invalid form submission.
+        Test handling of invalid form submission (password mismatch).
         """
         invalid_data = {
             "username": "testuser",
+            "email": "testuser@example.com",
             "password1": "password123",
             "password2": "differentpassword123",  # Different password confirmation
         }
@@ -148,6 +152,28 @@ class AccountViewTests(TestCase):
         self.assertTemplateUsed(response, "users/account.html")
         self.assertTrue(response.context["user_form"].errors)
 
+    def test_account_view_post_missing_email(self):
+        """
+        Test handling of invalid form submission (missing email).
+        """
+        invalid_data = {
+            "username": "testuser",
+            "password1": "newstrongpassword123",
+            "password2": "newstrongpassword123",
+        }
+        response = self.client.post(self.url, data=invalid_data)
+
+        # Ensure user details remain unchanged
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, "testuser")
+        self.assertEqual(self.user.email, "testuser@example.com")
+        self.assertTrue(self.user.check_password("testpassword"))
+
+        # Check response and form errors
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/account.html")
+        self.assertIn("email", response.context["user_form"].errors)
+
     def test_account_view_post_valid_avatar(self):
         """
         Test updating account with a valid avatar upload using a fake image.
@@ -162,6 +188,7 @@ class AccountViewTests(TestCase):
         )
         valid_data = {
             "username": "updateduser",
+            "email": "updatedemail@example.com",
             "password1": "newstrongpassword123",
             "password2": "newstrongpassword123",
             "avatar": avatar,
@@ -174,6 +201,7 @@ class AccountViewTests(TestCase):
 
         # Check if user details are updated
         self.assertEqual(self.user.username, "updateduser")
+        self.assertEqual(self.user.email, "updatedemail@example.com")
         self.assertTrue(self.user.check_password("newstrongpassword123"))
         self.assertIsNotNone(self.profile.avatar)
 
@@ -190,6 +218,7 @@ class AccountViewTests(TestCase):
         )
         invalid_data = {
             "username": "testuser",
+            "email": "testuser@example.com",
             "avatar": invalid_avatar,
         }
         response = self.client.post(self.url, data=invalid_data)
@@ -197,6 +226,7 @@ class AccountViewTests(TestCase):
         # Ensure user details remain unchanged
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, "testuser")
+        self.assertEqual(self.user.email, "testuser@example.com")
         self.assertTrue(self.user.check_password("testpassword"))
 
         # Check response and form errors

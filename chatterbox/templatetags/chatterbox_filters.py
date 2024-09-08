@@ -21,3 +21,11 @@ def make_links(value):
         ),
         value,
     )
+
+
+@register.filter(name="update_bg_color")
+def update_bg_color(content):
+    """
+    Update background color based on the presence of '@' in the message content.
+    """
+    return "bg-warning" if "@" in content else None

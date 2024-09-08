@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from .forms import UpdateUserForm, UpdateProfileForm
+from .forms import CustomUserCreationForm, UpdateUserForm, UpdateProfileForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 
@@ -12,7 +11,7 @@ def register(request):
     Register a new user.
     """
     if request.method == "POST":
-        form = UserCreationForm(data=request.POST)
+        form = CustomUserCreationForm(data=request.POST)
         if form.is_valid():
             form.save()
             messages.success(
@@ -20,7 +19,7 @@ def register(request):
             )
             return redirect("users:login")
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
     context = {"form": form}
     return render(request, "registration/register.html", context)
@@ -36,15 +35,15 @@ def account(request):
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
-            profile_form.save(commit=False)
 
-            # Read the avatar image as bytes and save to the Profile
+            # Save the profile form with the updated avatar as byte data
+            profile = profile_form.save(commit=False)
             avatar_file = profile_form.cleaned_data.get("avatar")
             if avatar_file:
                 avatar_bytes = avatar_file.read()
-                profile = request.user.profile
                 profile.avatar = avatar_bytes
-                profile.save()
+
+            profile.save()
 
             update_session_auth_hash(request, request.user)  # Keep user logged in
             messages.success(
