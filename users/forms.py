@@ -7,6 +7,10 @@ from .models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(
+        label="Email Address", widget=forms.EmailInput, required=True
+    )
+
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
