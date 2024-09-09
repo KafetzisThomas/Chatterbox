@@ -26,27 +26,46 @@
                                 {% if message.user == request.user %}
                                     <!-- message from the signed-in user (align right) -->
                                     <div class="d-flex flex-row justify-content-end mb-3">
-                                        <div>
+                                        <div class="me-2">
                                             {% if message.content %}
-                                                <p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white {{ message.content|update_bg_color }}">{{ message.content|make_links|safe }}</p>
+                                                <p class="small p-2 mb-1 rounded-3 bg-primary text-white {{ message.content|update_bg_color }}">
+                                                    {{ message.content|make_links|safe }}
+                                                </p>
                                             {% endif %}
                                             {% if message.image %}
                                                 <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
-                                            <p class="small me-3 mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
+                                            <p class="small mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
+                                        </div>
+
+                                        <!-- dropdown button for message actions -->
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <form action="{% url 'chatterbox:delete_message' message.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="bi bi-x-circle"></i> Delete message
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 {% else %}
                                     <!-- message from the other user (align left) -->
                                     <div class="d-flex flex-row justify-content-start mb-3">
-                                        <div>
+                                        <div class="ms-2">
                                             {% if message.content %}
-                                                <p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white {{ message.content|update_bg_color }}">{{ message.content|make_links|safe }}</p>
+                                                <p class="small p-2 mb-1 rounded-3 bg-secondary text-white {{ message.content|update_bg_color }}">
+                                                    {{ message.content|make_links|safe }}
+                                                </p>
                                             {% endif %}
                                             {% if message.image %}
                                                 <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
-                                            <p class="small ms-3 mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
+                                            <p class="small mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
                                         </div>
                                     </div>
                                 {% endif %}
