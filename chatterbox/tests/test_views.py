@@ -20,6 +20,7 @@ class ChatListViewTests(TestCase):
         """
         Set up the test environment by creating users, chats, and messages.
         """
+        # Create users
         self.user1 = User.objects.create_user(username="user1", password="password123")
         self.user2 = User.objects.create_user(username="user2", password="password123")
         self.user3 = User.objects.create_user(username="user3", password="password123")
@@ -122,6 +123,7 @@ class CreateChatViewTests(TestCase):
         """
         Set up the test environment by creating users.
         """
+        # Create users
         self.user1 = User.objects.create_user(username="user1", password="password123")
         self.user2 = User.objects.create_user(username="user2", password="password123")
         self.user3 = User.objects.create_user(username="user3", password="password123")
@@ -193,12 +195,13 @@ class ChatViewTests(TestCase):
         """
         Set up the test environment by creating users, chats, and messages.
         """
+        # Create users
         self.user1 = User.objects.create_user(username="user1", password="password123")
         self.user2 = User.objects.create_user(username="user2", password="password123")
         self.user3 = User.objects.create_user(username="user3", password="password123")
         self.client.login(username="user1", password="password123")
 
-        # Create chats
+        # Create chat
         self.chat1 = PrivateChat.objects.create(user1=self.user1, user2=self.user2)
 
         # Create messages
@@ -308,11 +311,12 @@ class DeleteChatViewTests(TestCase):
         """
         Set up the test environment by creating users, chats, and messages.
         """
+        # Create users
         self.user1 = User.objects.create_user(username="user1", password="password123")
         self.user2 = User.objects.create_user(username="user2", password="password123")
         self.client.login(username="user1", password="password123")
 
-        # Create chats
+        # Create chat
         self.chat1 = PrivateChat.objects.create(user1=self.user1, user2=self.user2)
 
         # Create messages
@@ -355,4 +359,76 @@ class DeleteChatViewTests(TestCase):
         # Ensure the chat is not deleted
         self.assertTrue(
             PrivateChat.objects.filter(user1=self.user1, user2=self.user2).exists()
+        )
+
+
+class DeleteMessageViewTests(TestCase):
+    """
+    Test case for the delete_message view.
+    """
+
+    def setUp(self):
+        """
+        Set up the test environment by creating users, chat, and messages.
+        """
+        # Create users
+        self.user1 = User.objects.create_user(username="user1", password="password123")
+        self.user2 = User.objects.create_user(username="user2", password="password123")
+        self.client.login(username="user1", password="password123")
+
+        # Create chat
+        self.chat = PrivateChat.objects.create(user1=self.user1, user2=self.user2)
+
+        # Create messages
+        self.message1 = Message.objects.create(
+            chat=self.chat, user=self.user1, content="Hello", timestamp=timezone.now()
+        )
+        self.message2 = Message.objects.create(
+            chat=self.chat, user=self.user2, content="Hi", timestamp=timezone.now()
+        )
+
+    def test_delete_message_success(self):
+        """
+        Test that a logged-in user can successfully delete a message.
+        """
+        self.client.login(username="user1", password="password123")
+        response = self.client.post(
+            reverse("chatterbox:delete_message", args=[self.message1.id])
+        )
+
+        # Check if the message is deleted
+        with self.assertRaises(Message.DoesNotExist):
+            Message.objects.get(id=self.message1.id)
+
+        self.assertRedirects(
+            response,
+            reverse("chatterbox:chat", args=[self.user1.username, self.user2.username]),
+        )
+
+    def test_delete_message_not_exist(self):
+        """
+        Test that deleting a non-existent message returns a 404 status code.
+        """
+        self.client.login(username="user1", password="password123")
+
+        # Attempt to delete a message that doesn't exist
+        response = self.client.post(reverse("chatterbox:delete_message", args=[9999]))
+
+        # Ensure that the response is a 404 --not found
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_message_not_logged_in(self):
+        """
+        Test that a non-logged-in user attempting to delete a message is redirected to the login page.
+        """
+        # Attempt to delete a message without logging in
+        self.client.logout()
+        response = self.client.post(
+            reverse("chatterbox:delete_message", args=[self.message1.id])
+        )
+
+        # Ensure the user is redirected to the login page
+        self.assertRedirects(
+            response,
+            f'/user/login/?next={reverse("chatterbox:delete_message", args=[self.message1.id])}',
         )

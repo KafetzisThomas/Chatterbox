@@ -124,7 +124,7 @@ def delete_chat(request, username, other_username):
 
 @login_required
 def delete_message(request, message_id):
-    message = Message.objects.get(id=message_id)
+    message = get_object_or_404(Message, id=message_id)
     message.delete()
 
     chat = message.chat
