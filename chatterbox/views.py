@@ -120,3 +120,19 @@ def delete_chat(request, username, other_username):
         print(f"Unexpected error: {err}")
 
     return redirect("chatterbox:chat_list")
+
+
+@login_required
+def delete_message(request, message_id):
+    message = Message.objects.get(id=message_id)
+    message.delete()
+
+    chat = message.chat
+    current_user = request.user
+    other_user = chat.user2 if chat.user1 == request.user else chat.user1
+
+    return redirect(
+        "chatterbox:chat",
+        username=current_user.username,
+        other_username=other_user.username,
+    )

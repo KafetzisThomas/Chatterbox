@@ -17,4 +17,8 @@ urlpatterns = [
         views.delete_chat,
         name="delete_chat",
     ),
+    # Delete message page
+    path(
+        "delete_message/<int:message_id>/", views.delete_message, name="delete_message"
+    ),
 ]
