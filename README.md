@@ -20,6 +20,7 @@
     - [X] Images
 - [X] Allow users to delete entire conversations
 - [x] Detect links and add an anchor tag to them
+- [X] Receive email notifications for mentions
 
 ## Purpose
 
