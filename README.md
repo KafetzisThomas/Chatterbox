@@ -1,14 +1,8 @@
-<div align="center">
-    <h1>
-        <img src="chatterbox/static/favicon.png" width="200" alt="Logo Icon"/>
-    </h1>
-    <p>Enables real-time chat conversations among users.<br>Written in Python/Django</p>
-    <a href="https://github.com/KafetzisThomas/Chatterbox/actions/workflows/tests.yml">
-        <img src = "https://github.com/KafetzisThomas/Chatterbox/actions/workflows/tests.yml/badge.svg" alt="Run Tests"/>
-    </a>
-</div>
-
----
+<p align="center">
+    <img src="chatterbox/static/favicon.png" width="200" alt="Logo Icon"/><br>
+    Enables real-time chat conversations among users.<br>
+    Written in Python/Django
+</p>
 
 ## Features
 
