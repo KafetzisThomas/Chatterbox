@@ -2,7 +2,7 @@
     <h1>
         <img src="chatterbox/static/favicon.png" width="200" alt="Logo Icon"/>
     </h1>
-    <p>Enables real-time chat conversations among users.<br><a href="https://chatterbox-demo.onrender.com/">https://chatterbox-demo.onrender.com/</a><br>Written in Python/Django</p>
+    <p>Enables real-time chat conversations among users.<br>Written in Python/Django</p>
     <a href="https://github.com/KafetzisThomas/Chatterbox/actions/workflows/tests.yml">
         <img src = "https://github.com/KafetzisThomas/Chatterbox/actions/workflows/tests.yml/badge.svg" alt="Run Tests"/>
     </a>
@@ -23,15 +23,13 @@
 - [x] Detect links and add an anchor tag to them
 - [X] Receive email notifications for mentions
 
-## Purpose
+## Notice
 
-The primary goal of this project is to **provide an open-source chat application that anyone can use, modify, and learn from**. While the deployed app is available for use, the main intention is not to attract active users or compete with major chat applications. Instead, this project aims to share the code, primarily written in Django, with developers who might find it helpful for building similar real-time communication tools or for personal projects.
-
-During the development and deployment of this project, I faced several challenges, particularly with **CSRF verification errors**. These issues led me to create a Django forum post where I detailed the problem and finally the solution I found. I hope this resource proves helpful for others encountering similar deployment issues:
+During the development and deployment of this project I faced several challenges, particularly with **CSRF verification errors**. These issues led me to create a Django forum post where I detailed the problem and finally the solution I found. I hope this resource proves helpful for others encountering similar deployment issues:
 
 https://forum.djangoproject.com/t/forbidden-403-csrf-verification-failed-request-aborted-error-encountered-in-production/34354
 
-If you find this project interesting, helpful, or inspiring, please consider giving it a `star`, `following`, or even `donating` to support further development and improvements.
+If you find this project interesting, helpful or inspiring, please consider giving it a `star` or `following` to support further development and improvements.
 
 ## Django Models
 Here is a graphical representation of the Django models used in this project:
