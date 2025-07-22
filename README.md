@@ -40,18 +40,11 @@ Here is a graphical representation of the Django models used in this project:
 
 ## Setup for Local Development
 
-### Set up Virtual Environment
+### Install uv
 
 ```bash
 ➜ cd path/to/root/directory
-$ python3 -m venv env/
-$ source env/bin/activate
-```
-
-### Install Dependencies
-
-```bash
-$ pip3 install -r requirements.txt
+$ pip install uv
 ```
 
 ### Create Enviroment Variable file
@@ -61,7 +54,7 @@ $ touch main/.env
 $ nano main/.env
 ```
 
-Add the following environment variables (modify as needed):
+Add the following (adjust as needed):
 ```bash
 ➜ SECRET_KEY="example_secret_key"  # https://stackoverflow.com/a/57678930
 ➜ DEBUG=True  # For development
@@ -72,12 +65,12 @@ Save changes and close the file.
 ### Migrate Database
 
 ```bash
-$ python3 manage.py migrate
+$ uv run manage.py migrate
 ```
 
 ### Run Django Server
 ```bash
-$ python3 manage.py runserver
+$ uv run manage.py runserver
 ```
 
 Now you can access the website at `http://127.0.0.1:8000/` or `http://localhost:8000/`.
@@ -85,8 +78,7 @@ Now you can access the website at `http://127.0.0.1:8000/` or `http://localhost:
 ## Run Tests
 
 ```bash
-➜ cd path/to/root/directory
-$ python3 manage.py test users.tests chatterbox.tests
+$ uv run manage.py test
 ```
 
 ## Contributing Guidelines for Chatterbox
