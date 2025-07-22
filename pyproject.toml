@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "asgiref==3.8.1",
-    "async-timeout==4.0.3",
+    "async-timeout==5.0.1",
     "attrs==24.2.0",
     "autobahn==24.4.2",
     "automat==24.8.0",
