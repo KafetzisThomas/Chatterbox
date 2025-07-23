@@ -23,9 +23,9 @@ class Profile(models.Model):
                 new_img = (300, 300)
                 img.thumbnail(new_img)
 
-                byte_io = io.BytesIO()
-                img.save(byte_io, format="PNG")
-                self.avatar = byte_io.getvalue()
+            byte_io = io.BytesIO()
+            img.save(byte_io, format="PNG")
+            self.avatar = byte_io.getvalue()
 
         super().save(*args, **kwargs)
 
