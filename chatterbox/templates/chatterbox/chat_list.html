@@ -28,7 +28,7 @@
                                         <li class="p-3 border-bottom">
                                             <a href="{% url 'chatterbox:chat' username=request.user.username other_username=other_user.username %}" class="d-flex align-items-center text-decoration-none text-dark">
                                                 {% if other_user.profile.avatar %}
-                                                    <img src="data:image/png;base64,{{ other_user.profile.avatar|base64 }}" alt="avatar1" class="rounded-circle me-3" width="60"/>
+                                                    <img src="data:image/png;base64,{{ other_user.profile.avatar|base64 }}" alt="avatar1" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;"/>
                                                 {% else %}
                                                     <img src="{% static 'default.png' %}" alt="avatar1" class="rounded-circle me-3" width="60"/>
                                                 {% endif %}
