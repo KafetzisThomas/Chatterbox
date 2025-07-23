@@ -73,6 +73,10 @@ Now you can access the website at `http://127.0.0.1:8000/` or `http://localhost:
 $ uv run manage.py test
 ```
 
+## Demo Image
+
+<img width="1919" height="1079" alt="Screenshot 2025-07-23 121108" src="https://github.com/user-attachments/assets/425d0fd7-93d7-48c9-8c3b-5f2f631ee74f" />
+
 ## Contributing Guidelines for Chatterbox
 
 ### Pull Requests
