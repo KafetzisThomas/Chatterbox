@@ -48,8 +48,15 @@ $ nano main/.env
 
 Add the following (adjust as needed):
 ```bash
+# Django settings
 ➜ SECRET_KEY="example_secret_key"  # https://stackoverflow.com/a/57678930
+➜ ALLOWED_HOSTS="localhost,127.0.0.1"
+➜ CSRF_TRUSTED_ORIGINS="http://localhost:8001"
 ➜ DEBUG=True  # For development
+
+# Email settings
+➜ EMAIL_HOST_USER="example_email_host"
+➜ EMAIL_HOST_PASSWORD="example_email_password"
 ```
 
 Save changes and close the file.
