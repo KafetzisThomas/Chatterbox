@@ -49,3 +49,19 @@ body {
   height: calc(100% - 60px);
   max-height: calc(100% - 60px);  /* Ensure max height also respects the input area */
 }
+
+/* Keyframes for fade-in animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Fade-in animation styles */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}

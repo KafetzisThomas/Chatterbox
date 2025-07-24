@@ -64,6 +64,7 @@ function handleIncomingMessage(e) {
     const messageContent = convertLinks(data.message);
     const bgColor = data.message && data.message.includes('@') ? 'bg-warning' : '';
     const imageContent = data.image ? `<img src="data:image/png;base64,${data.image}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>` : '';
+    div.classList.add("fade-in");
 
     if (data.username === document.getElementById('username').value) {
         div.classList.add("d-flex", "flex-row", "justify-content-end", "mb-3");
