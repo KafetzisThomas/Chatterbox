@@ -54,7 +54,7 @@ Add the following (adjust as needed):
 ➜ CSRF_TRUSTED_ORIGINS="http://localhost:8001"
 ➜ DEBUG=True  # For development
 
-# Email settings
+# OPTIONAL: Email settings for mention notifications
 ➜ EMAIL_HOST_USER="example_email_host"
 ➜ EMAIL_HOST_PASSWORD="example_email_password"
 ```
