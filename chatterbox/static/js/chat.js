@@ -66,13 +66,17 @@ function handleIncomingMessage(e) {
     const imageContent = data.image ? `<img src="data:image/png;base64,${data.image}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>` : '';
     div.classList.add("fade-in");
 
+    // Use current time for HH:MM
+    const now = new Date();
+    const timeString = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
+
     if (data.username === document.getElementById('username').value) {
         div.classList.add("d-flex", "flex-row", "justify-content-end", "mb-3");
         div.innerHTML = `
             <div>
                 ${messageContent ? `<p class="small p-2 me-3 mb-1 rounded-3 bg-primary text-white ${bgColor}">${messageContent}</p>` : ''}
                 ${imageContent}
-                <p class="small me-3 mb-0 rounded-3 text-muted text-end">Just now</p>
+                <p class="small me-3 mb-0 rounded-3 text-muted text-end">${timeString}</p>
             </div>
         `;
     } else {
@@ -81,7 +85,7 @@ function handleIncomingMessage(e) {
             <div>
                 ${messageContent ? `<p class="small p-2 ms-3 mb-1 rounded-3 bg-secondary text-white ${bgColor}">${messageContent}</p>` : ''}
                 ${imageContent}
-                <p class="small ms-3 mb-0 rounded-3 text-muted">Just now</p>
+                <p class="small ms-3 mb-0 rounded-3 text-muted">${timeString}</p>
             </div>
         `;
     }
