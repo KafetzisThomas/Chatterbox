@@ -8,10 +8,7 @@
 
 - [X] View and modify your profile details, including your avatar, username and password.
 - [X] Create private 1-on-1 conversations with other users.
-- [X] Users can send:
-  - [X] Text
-  - [ ] Files
-  - [X] Images
+- [X] Users can send `text` and `images`
 - [X] Allow users to delete entire conversations
 - [X] Remove individual messages in conversations
 - [x] Detect links and add an anchor tag to them
