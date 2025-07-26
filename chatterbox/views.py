@@ -90,8 +90,15 @@ def chat(request, username, other_username):
 
     messages = Message.objects.filter(chat=chat).order_by("timestamp")
 
+    # Zip with previous message
+    messages_with_prev = []
+    prev = None
+    for message in messages:
+        messages_with_prev.append((message, prev))
+        prev = message
+
     context = {
-        "messages": messages,
+        "messages_with_prev": messages_with_prev,
         "current_user": user1,
         "other_user": user2,
     }

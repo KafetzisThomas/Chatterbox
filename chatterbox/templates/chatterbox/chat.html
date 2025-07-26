@@ -22,7 +22,10 @@
 
                         <!-- chat messages -->
                         <div id="messages-container" class="pt-3 pe-3 messages-container flex-grow-1 overflow-auto">
-                            {% for message in messages %}
+                            {% for message, prev in messages_with_prev  %}
+                                {% if prev and message.timestamp.date != prev.timestamp.date %}
+                                    <p class="text-center text-muted">{{ message.timestamp.date }}</p>
+                                {% endif %}
                                 {% if message.user == request.user %}
                                     <!-- message from the signed-in user (align right) -->
                                     <div class="d-flex flex-row justify-content-end mb-3">
@@ -35,7 +38,7 @@
                                             {% if message.image %}
                                                 <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
-                                            <p class="small mb-0 rounded-3 text-muted text-end">{{ message.timestamp }}</p>
+                                            <p class="small mb-0 rounded-3 text-muted text-end">{{ message.timestamp|date:"h:i A" }}</p>
                                         </div>
 
                                         <!-- dropdown button for message actions -->
@@ -65,7 +68,7 @@
                                             {% if message.image %}
                                                 <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
-                                            <p class="small mb-0 rounded-3 text-muted">{{ message.timestamp }}</p>
+                                            <p class="small mb-0 rounded-3 text-muted">{{ message.timestamp|date:"h:i A" }}</p>
                                         </div>
                                     </div>
                                 {% endif %}

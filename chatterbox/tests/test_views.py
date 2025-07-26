@@ -48,7 +48,7 @@ class ChatListViewTests(TestCase):
         self.client.logout()
         response = self.client.get(reverse("chatterbox:chat_list"))
         self.assertRedirects(
-            response, f'{reverse("users:login")}?next={reverse("chatterbox:chat_list")}'
+            response, f"{reverse('users:login')}?next={reverse('chatterbox:chat_list')}"
         )
 
     def test_view_url_exists_at_desired_location(self):
@@ -222,7 +222,7 @@ class ChatViewTests(TestCase):
         )
         self.assertRedirects(
             response,
-            f'{reverse("users:login")}?next={reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])}',
+            f"{reverse('users:login')}?next={reverse('chatterbox:chat', args=[self.user1.username, self.user2.username])}",
         )
 
     def test_chat_view_url_exists_at_desired_location(self):
@@ -264,9 +264,9 @@ class ChatViewTests(TestCase):
         # Check context data
         self.assertEqual(response.context["current_user"], self.user1)
         self.assertEqual(response.context["other_user"], self.user2)
-        self.assertEqual(len(response.context["messages"]), 2)
-        self.assertEqual(response.context["messages"][0], self.message1)
-        self.assertEqual(response.context["messages"][1], self.message2)
+        self.assertEqual(len(response.context["messages_with_prev"]), 2)
+        self.assertEqual(response.context["messages_with_prev"][1][1], self.message1)
+        self.assertEqual(response.context["messages_with_prev"][1][0], self.message2)
 
     def test_chat_view_redirects_if_user_not_involved_in_chat(self):
         """
@@ -430,5 +430,5 @@ class DeleteMessageViewTests(TestCase):
         # Ensure the user is redirected to the login page
         self.assertRedirects(
             response,
-            f'/user/login/?next={reverse("chatterbox:delete_message", args=[self.message1.id])}',
+            f"/user/login/?next={reverse('chatterbox:delete_message', args=[self.message1.id])}",
         )
