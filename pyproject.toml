@@ -11,7 +11,7 @@ dependencies = [
     "autobahn==24.4.2",
     "automat==24.8.0",
     "brotli==1.1.0",
-    "cffi==1.17.0",
+    "cffi==1.17.1",
     "channels==4.1.0",
     "channels-redis==4.2.0",
     "constantly==23.10.4",
