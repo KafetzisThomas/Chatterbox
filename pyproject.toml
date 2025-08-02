@@ -29,7 +29,7 @@ dependencies = [
     "msgpack==1.1.1",
     "pillow==10.4.0",
     "psycopg2-binary==2.9.9",
-    "pyasn1==0.6.0",
+    "pyasn1==0.6.1",
     "pyasn1-modules==0.4.0",
     "pycparser==2.22",
     "pyopenssl==25.1.0",
