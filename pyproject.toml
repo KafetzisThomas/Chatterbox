@@ -41,6 +41,5 @@ dependencies = [
     "twisted==25.5.0",
     "txaio==25.6.1",
     "typing-extensions==4.15.0",
-    "whitenoise==6.7.0",
     "zope-interface==7.0.1",
 ]
