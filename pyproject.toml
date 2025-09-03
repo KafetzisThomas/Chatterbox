@@ -35,7 +35,7 @@ dependencies = [
     "pyopenssl==25.1.0",
     "python-dotenv==1.1.1",
     "redis==5.0.8",
-    "service-identity==24.1.0",
+    "service-identity==24.2.0",
     "sqlparse==0.5.3",
     "tomli==2.0.1",
     "twisted==25.5.0",
