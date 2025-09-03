@@ -22,7 +22,7 @@ dependencies = [
     "django==5.1.10",
     "django-bootstrap5==25.1",
     "django-crispy-forms==2.3",
-    "django-extensions==3.2.3",
+    "django-extensions==4.1",
     "hyperlink==21.0.0",
     "idna==3.10",
     "incremental==24.7.2",
