@@ -20,7 +20,7 @@ dependencies = [
     "daphne==4.2.1",
     "dj-database-url==2.2.0",
     "django==5.1.10",
-    "django-bootstrap5==25.1",
+    "django-bootstrap5==25.2",
     "django-crispy-forms==2.3",
     "django-extensions==3.2.3",
     "hyperlink==21.0.0",
