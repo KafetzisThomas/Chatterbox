@@ -18,7 +18,7 @@ dependencies = [
     "crispy-bootstrap5==2024.2",
     "cryptography==44.0.1",
     "daphne==4.2.1",
-    "dj-database-url==2.2.0",
+    "dj-database-url==3.0.1",
     "django==5.1.10",
     "django-bootstrap5==25.1",
     "django-crispy-forms==2.3",
