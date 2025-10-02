@@ -31,7 +31,7 @@ dependencies = [
     "psycopg2-binary==2.9.10",
     "pyasn1==0.6.1",
     "pyasn1-modules==0.4.0",
-    "pycparser==2.22",
+    "pycparser==2.23",
     "pyopenssl==25.3.0",
     "python-dotenv==1.1.1",
     "redis==5.0.8",
