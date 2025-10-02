@@ -32,7 +32,7 @@ dependencies = [
     "pyasn1==0.6.1",
     "pyasn1-modules==0.4.0",
     "pycparser==2.22",
-    "pyopenssl==25.1.0",
+    "pyopenssl==25.3.0",
     "python-dotenv==1.1.1",
     "redis==5.0.8",
     "service-identity==24.2.0",
