@@ -26,7 +26,7 @@ dependencies = [
     "hyperlink==21.0.0",
     "idna==3.10",
     "incremental==24.7.2",
-    "msgpack==1.1.1",
+    "msgpack==1.1.2",
     "pillow==11.3.0",
     "psycopg2-binary==2.9.10",
     "pyasn1==0.6.1",
