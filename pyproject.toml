@@ -37,7 +37,7 @@ dependencies = [
     "redis==5.0.8",
     "service-identity==24.2.0",
     "sqlparse==0.5.3",
-    "tomli==2.2.1",
+    "tomli==2.3.0",
     "twisted==25.5.0",
     "txaio==25.6.1",
     "typing-extensions==4.15.0",
