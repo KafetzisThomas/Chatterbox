@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "asgiref==3.8.1",
     "async-timeout==5.0.1",
-    "attrs==25.3.0",
+    "attrs==25.4.0",
     "autobahn==24.4.2",
     "automat==25.4.16",
     "brotli==1.1.0",
