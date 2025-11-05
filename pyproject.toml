@@ -10,7 +10,7 @@ dependencies = [
     "attrs==25.4.0",
     "autobahn==24.4.2",
     "automat==25.4.16",
-    "brotli==1.1.0",
+    "brotli==1.2.0",
     "cffi==2.0.0",
     "channels==4.1.0",
     "channels-redis==4.2.0",
