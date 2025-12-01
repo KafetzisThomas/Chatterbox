@@ -39,7 +39,7 @@ dependencies = [
     "sqlparse==0.5.3",
     "tomli==2.3.0",
     "twisted==25.5.0",
-    "txaio==25.6.1",
+    "txaio==25.9.2",
     "typing-extensions==4.15.0",
     "zope-interface==7.0.1",
 ]
