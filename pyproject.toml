@@ -16,7 +16,7 @@ dependencies = [
     "channels-redis==4.2.0",
     "constantly==23.10.4",
     "crispy-bootstrap5==2025.6",
-    "cryptography==45.0.7",
+    "cryptography==46.0.3",
     "daphne==4.2.1",
     "dj-database-url==3.0.1",
     "django==5.2.8",
