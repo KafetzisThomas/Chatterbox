@@ -5,7 +5,7 @@ description = "Enables real-time chat conversations among users."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "asgiref==3.8.1",
+    "asgiref==3.11.0",
     "async-timeout==5.0.1",
     "attrs==25.4.0",
     "autobahn==24.4.2",
