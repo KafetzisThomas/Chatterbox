@@ -30,7 +30,7 @@ dependencies = [
     "pillow==11.3.0",
     "psycopg2-binary==2.9.11",
     "pyasn1==0.6.1",
-    "pyasn1-modules==0.4.0",
+    "pyasn1-modules==0.4.2",
     "pycparser==2.23",
     "pyopenssl==25.3.0",
     "python-dotenv==1.2.1",
