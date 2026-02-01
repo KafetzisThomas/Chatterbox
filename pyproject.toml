@@ -12,7 +12,7 @@ dependencies = [
     "automat==25.4.16",
     "brotli==1.2.0",
     "cffi==2.0.0",
-    "channels==4.1.0",
+    "channels==4.3.2",
     "channels-redis==4.2.0",
     "constantly==23.10.4",
     "crispy-bootstrap5==2025.6",
