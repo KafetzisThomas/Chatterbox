@@ -27,7 +27,7 @@ dependencies = [
     "idna==3.10",
     "incremental==24.11.0",
     "msgpack==1.1.2",
-    "pillow==11.3.0",
+    "pillow==12.1.0",
     "psycopg2-binary==2.9.11",
     "pyasn1==0.6.2",
     "pyasn1-modules==0.4.2",
