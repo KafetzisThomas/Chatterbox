@@ -150,15 +150,15 @@ wheels = [
 
 [[package]]
 name = "channels"
-version = "4.1.0"
+version = "4.3.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "django" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7d/73/da9e496657b242308d68cf79c937be125fcca4af61a620d98adfdde66fab/channels-4.1.0.tar.gz", hash = "sha256:e0ed375719f5c1851861f05ed4ce78b0166f9245ca0ecd836cb77d4bb531489d", size = 26132, upload-time = "2024-04-03T14:01:56.067Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/74/92/b18d4bb54d14986a8b35215a1c9e6a7f9f4d57ca63ac9aee8290ebb4957d/channels-4.3.2.tar.gz", hash = "sha256:f2bb6bfb73ad7fb4705041d07613c7b4e69528f01ef8cb9fb6c21d9295f15667", size = 27023, upload-time = "2025-11-20T15:13:05.102Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a3/68/d9098a51b1661c00c70bb9ce7c42d65044e475b8d1c16ba05b8ee32b7f49/channels-4.1.0-py3-none-any.whl", hash = "sha256:a3c4419307f582c3f71d67bfb6eff748ae819c2f360b9b141694d84f242baa48", size = 30306, upload-time = "2024-04-03T14:01:54.397Z" },
+    { url = "https://files.pythonhosted.org/packages/16/34/c32915288b7ef482377b6adc401192f98c6a99b3a145423d3b8aed807898/channels-4.3.2-py3-none-any.whl", hash = "sha256:fef47e9055a603900cf16cef85f050d522d9ac4b3daccf24835bd9580705c176", size = 31313, upload-time = "2025-11-20T15:13:02.357Z" },
 ]
 
 [[package]]
@@ -229,7 +229,7 @@ requires-dist = [
     { name = "automat", specifier = "==25.4.16" },
     { name = "brotli", specifier = "==1.2.0" },
     { name = "cffi", specifier = "==2.0.0" },
-    { name = "channels", specifier = "==4.1.0" },
+    { name = "channels", specifier = "==4.3.2" },
     { name = "channels-redis", specifier = "==4.2.0" },
     { name = "constantly", specifier = "==23.10.4" },
     { name = "crispy-bootstrap5", specifier = "==2025.6" },
