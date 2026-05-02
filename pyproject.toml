@@ -34,7 +34,7 @@ dependencies = [
     "pycparser==3.0",
     "pyopenssl==26.0.0",
     "python-dotenv==1.2.2",
-    "redis==7.1.0",
+    "redis==7.4.0",
     "service-identity==24.2.0",
     "sqlparse==0.5.5",
     "tomli==2.4.1",
