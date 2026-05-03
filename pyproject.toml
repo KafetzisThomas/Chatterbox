@@ -24,7 +24,7 @@ dependencies = [
     "django-crispy-forms==2.5",
     "django-extensions==4.1",
     "hyperlink==21.0.0",
-    "idna==3.10",
+    "idna==3.13",
     "incremental==24.11.0",
     "msgpack==1.1.2",
     "pillow==12.2.0",
