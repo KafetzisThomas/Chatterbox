@@ -38,7 +38,7 @@ dependencies = [
     "service-identity==24.2.0",
     "sqlparse==0.5.5",
     "tomli==2.4.1",
-    "twisted==25.5.0",
+    "twisted==26.4.0",
     "txaio==25.12.2",
     "typing-extensions==4.15.0",
     "zope-interface==8.4",
