@@ -245,7 +245,6 @@ dependencies = [
     { name = "daphne" },
     { name = "dj-database-url" },
     { name = "django" },
-    { name = "django-bootstrap5" },
     { name = "django-crispy-forms" },
     { name = "django-extensions" },
     { name = "hyperlink" },
@@ -286,7 +285,6 @@ requires-dist = [
     { name = "daphne", specifier = "==4.2.1" },
     { name = "dj-database-url", specifier = "==3.1.2" },
     { name = "django", specifier = "==6.0.5" },
-    { name = "django-bootstrap5", specifier = "==26.2" },
     { name = "django-crispy-forms", specifier = "==2.6" },
     { name = "django-extensions", specifier = "==4.1" },
     { name = "hyperlink", specifier = "==21.0.0" },
@@ -423,18 +421,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/5e/f1/bf85f0d29ef76abf901f193fe8fef4769d3da7794197832bc30151c071d8/django-6.0.5.tar.gz", hash = "sha256:bc6d6872e98a2864c836e42edd644b362db311147dd5aa8d5b82ba7a032f5269", size = 10924131, upload-time = "2026-05-05T13:54:39.329Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/94/5b/1328f8b84fce040c404f76822bf8c57d254e368e8cbd8bd67ec2b26d75f5/django-6.0.5-py3-none-any.whl", hash = "sha256:9d58a7cb49244e74c8e161d5e403a46d6209f1009ba40f5a66d6aa0d0786a8f0", size = 8368680, upload-time = "2026-05-05T13:54:33.532Z" },
-]
-
-[[package]]
-name = "django-bootstrap5"
-version = "26.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f8/31/bd9e6acdf959d5e19757026c206a6bdfceec3001ee85bb1f9799ce304f87/django_bootstrap5-26.2.tar.gz", hash = "sha256:12331059c8230ba372ffaad990a706151e1ad8f721a870aa2e862cf6746f0d33", size = 51468, upload-time = "2026-02-08T11:47:19.067Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/7a/79/d4b547849a86f450b1f1fb77f306da5d7844aba45f4aa10450d375fc26f5/django_bootstrap5-26.2-py3-none-any.whl", hash = "sha256:179af37c59f4e9b1070fc650f30961c5d903c2c0ad60280ad5b63ed394f68658", size = 26851, upload-time = "2026-02-08T11:47:20.198Z" },
 ]
 
 [[package]]
