@@ -1,6 +1,9 @@
 {% extends "base.html" %}
-{% load chatterbox_filters %}
-{% load user_filters %}
+
+{% load base64_encode %}
+{% load convert_to_link %}
+{% load update_bg_color %}
+
 {% load static %}
 
 {% block title %}{{ other_user.username }}{% endblock title %}
@@ -32,11 +35,11 @@
                                         <div class="me-2">
                                             {% if message.content %}
                                                 <p class="small p-2 mb-1 rounded-3 bg-primary text-white {{ message.content|update_bg_color }}">
-                                                    {{ message.content|make_links|safe }}
+                                                    {{ message.content|convert_to_link|safe }}
                                                 </p>
                                             {% endif %}
                                             {% if message.image %}
-                                                <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
+                                                <img src="data:image/png;base64,{{ message.image|base64_encode }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
                                             <p class="small mb-0 rounded-3 text-muted text-end">{{ message.timestamp|date:"h:i A" }}</p>
                                         </div>
@@ -62,11 +65,11 @@
                                         <div class="ms-2">
                                             {% if message.content %}
                                                 <p class="small p-2 mb-1 rounded-3 bg-secondary text-white {{ message.content|update_bg_color }}">
-                                                    {{ message.content|make_links|safe }}
+                                                    {{ message.content|convert_to_link|safe }}
                                                 </p>
                                             {% endif %}
                                             {% if message.image %}
-                                                <img src="data:image/png;base64,{{ message.image|base64 }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
+                                                <img src="data:image/png;base64,{{ message.image|base64_encode }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
                                             <p class="small mb-0 rounded-3 text-muted">{{ message.timestamp|date:"h:i A" }}</p>
                                         </div>
@@ -80,7 +83,7 @@
                         <!-- message input area, stays at the bottom -->
                         <div class="d-flex align-items-center mt-3">
                             {% if current_user.profile.avatar %}
-                                <img src="data:image/png;base64,{{ current_user.profile.avatar|base64 }}" id="avatar" alt="avatar" class="rounded-circle"/>
+                                <img src="data:image/png;base64,{{ current_user.profile.avatar|base64_encode }}" id="avatar" alt="avatar" class="rounded-circle"/>
                             {% else %}
                                 <img src="{% static 'default.png' %}" id="avatar" alt="avatar" class="rounded-circle"/>
                             {% endif %}
