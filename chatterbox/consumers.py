@@ -65,7 +65,7 @@ class Chat(AsyncWebsocketConsumer):
         if user1.id < user2.id:
             chat, _ = PrivateChat.objects.get_or_create(user1=user1, user2=user2)
         else:
-            PrivateChat.objects.get_or_create(user1=user2, user2=user1)
+            chat, _ = PrivateChat.objects.get_or_create(user1=user2, user2=user1)
         return chat
 
     @database_sync_to_async
