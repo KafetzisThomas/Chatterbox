@@ -1,8 +1,7 @@
-<p align="center">
-    <img src="chatterbox/static/favicon.png" width="200" alt="Logo Icon"/><br>
-    Enables real-time chat conversations among users.<br>
-    Written in Python/Django
-</p>
+<div align="center">
+    <img src="static/favicon.png" width="200"/><br>
+    <p>Enables real-time chat conversations among users.<br>Written in Python/Django</p>
+</div>
 
 ## Features
 
@@ -26,45 +25,25 @@ If you find this project interesting, helpful or inspiring, please consider givi
 
 ![Django Models Graph](https://github.com/user-attachments/assets/3e8d8f5a-7d23-496d-bf96-b6606ea045cc)
 
-## Setup for Local Development
+## Usage
 
-### Install uv
+### Local Development
+
+First install `uv` and sync the project dependencies:
 
 ```bash
 cd path/to/root/directory
 pip install uv
+uv sync
 ```
 
-### Create Enviroment Variable file
-
-```bash
-touch main/.env
-nano main/.env
-```
-
-Add the following (adjust as needed):
-
-```ini
-# Django settings
-SECRET_KEY="example_secret_key"  # https://stackoverflow.com/a/57678930
-ALLOWED_HOSTS="localhost,127.0.0.1"
-CSRF_TRUSTED_ORIGINS="http://localhost:8001"
-DEBUG=True  # For development
-
-# OPTIONAL: Email settings for mention notifications
-EMAIL_HOST_USER="example_email_host"
-EMAIL_HOST_PASSWORD="example_email_password"
-```
-
-Save changes and close the file.
-
-### Migrate Database
+Migrate database:
 
 ```bash
 uv run manage.py migrate
 ```
 
-### Run Django Server
+Run Django server:
 
 ```bash
 uv run manage.py runserver
