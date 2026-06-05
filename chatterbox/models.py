@@ -1,35 +1,28 @@
-from datetime import datetime, timedelta, timezone
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
+from datetime import datetime, timedelta, timezone
 
 
 class PrivateChat(models.Model):
-    user1 = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="chats_user1"
-    )
-    user2 = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="chats_user2"
-    )
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_user1")
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_user2")
 
     def __str__(self):
-        return f"Chat between {self.user1.username} and {self.user2.username}"
+        return f"{self.user1.username} and {self.user2.username}"
 
 
 class Message(models.Model):
-    chat = models.ForeignKey(
-        PrivateChat, on_delete=models.CASCADE, related_name="messages"
-    )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(blank=True)
     image = models.BinaryField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    chat = models.ForeignKey(PrivateChat, on_delete=models.CASCADE, related_name="messages")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def get_time_diff(self):
         if self.timestamp:
             now_time = datetime.now(timezone.utc)
             timediff = now_time - self.timestamp
 
-            # Convert the timediff to human-readable format
             if timediff < timedelta(minutes=1):
                 return f"{int(timediff.total_seconds())} seconds ago"
             elif timediff < timedelta(hours=1):
@@ -40,6 +33,4 @@ class Message(models.Model):
                 return f"{int(timediff.total_seconds() // 86400)} days ago"
 
     def __str__(self):
-        if self.content:
-            return f"{self.user.username}: {self.content[:20]}..."
-        return f"{self.user.username} sent an image."
+        return f"{self.user.username}: {self.content[:20]}"

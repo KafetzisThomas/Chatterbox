@@ -1,51 +1,59 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib import messages
-from .forms import CustomUserCreationForm, UpdateUserForm, UpdateProfileForm
+from .forms import RegistrationForm, UsernameUpdateForm, UpdateProfileForm
 
 def register(request):
     if request.method == "POST":
-        form = CustomUserCreationForm(data=request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "Account successfully created! You're now able to login.")
             return redirect("users:login")
     else:
-        form = CustomUserCreationForm()
+        form = RegistrationForm()
 
     return render(request, "users/register.html", {"form": form})
 
 @login_required
 def account(request):
+    user = request.user
+    username_form = UsernameUpdateForm(instance=user)
+    profile_form = UpdateProfileForm(instance=user.profile)
+
     if request.method == "POST":
-        user_form = UpdateUserForm(instance=request.user, data=request.POST)
-        profile_form = UpdateProfileForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+        action = request.POST.get("action")
+        if action == "update_username":
+            username_form = UsernameUpdateForm(request.POST, instance=user)
+            if username_form.is_valid():
+                username_form.save()
+                messages.success(request, "Username updated successfully.")
+                return redirect("users:account")
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile = profile_form.save(commit=False)
-            avatar_file = profile_form.cleaned_data.get("avatar")
-            if avatar_file:
-                avatar_bytes = avatar_file.read()
-                profile.avatar = avatar_bytes
+        elif action == "update_avatar":
+            profile_form = UpdateProfileForm(request.POST, instance=user.profile, files=request.FILES)
+            if profile_form.is_valid():
+                profile = profile_form.save(commit=False)
+                avatar_file = profile_form.cleaned_data.get("avatar")
+                if avatar_file:
+                    avatar_bytes = avatar_file.read()
+                    profile.avatar = avatar_bytes
 
-            profile.save()
+                profile.save()
 
-            update_session_auth_hash(request, request.user)  # keep user logged in
-            messages.success(request, "Your account settings were successfully updated!")
-            return redirect("chatterbox:chat_list")
-    else:
-        user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+                update_session_auth_hash(request, user)
+                messages.success(request, "Avatar updated successfully.")
+                return redirect("users:account")
 
-    context = {"user_form": user_form, "profile_form": profile_form}
+    context = {"username_form": username_form, "profile_form": profile_form}
     return render(request, "users/account.html", context)
 
 @login_required
+@require_POST
 def delete_account(request):
-    user = User.objects.get(id=request.user.id)
+    user = request.user
     user.delete()
     messages.error(request, "Your account has been successfully deleted!")
     return redirect("users:register")

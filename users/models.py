@@ -5,18 +5,10 @@ from PIL import Image
 
 
 class Profile(models.Model):
-    """
-    Extending User model by adding an avatar stored as bytes.
-    """
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.BinaryField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        """
-        Resize the avatar image.
-        Convert it to bytes.
-        """
         if self.avatar:
             img = Image.open(io.BytesIO(self.avatar))
             if img.height > 300 or img.width > 300:
