@@ -20,32 +20,27 @@ def register(request):
 @login_required
 def account(request):
     user = request.user
-    username_form = UsernameUpdateForm(instance=user)
-    profile_form = UpdateProfileForm(instance=user.profile)
-
     if request.method == "POST":
-        action = request.POST.get("action")
-        if action == "update_username":
-            username_form = UsernameUpdateForm(request.POST, instance=user)
-            if username_form.is_valid():
-                username_form.save()
-                messages.success(request, "Username updated successfully.")
-                return redirect("users:account")
+        username_form = UsernameUpdateForm(request.POST, instance=user)
+        profile_form = UpdateProfileForm(request.POST, instance=user.profile, files=request.FILES)
 
-        elif action == "update_avatar":
-            profile_form = UpdateProfileForm(request.POST, instance=user.profile, files=request.FILES)
-            if profile_form.is_valid():
-                profile = profile_form.save(commit=False)
-                avatar_file = profile_form.cleaned_data.get("avatar")
-                if avatar_file:
-                    avatar_bytes = avatar_file.read()
-                    profile.avatar = avatar_bytes
+        if username_form.is_valid() and profile_form.is_valid():
+            username_form.save()
 
-                profile.save()
+            profile = profile_form.save(commit=False)
+            avatar_file = profile_form.cleaned_data.get("avatar")
+            if avatar_file:
+                avatar_bytes = avatar_file.read()
+                profile.avatar = avatar_bytes
 
-                update_session_auth_hash(request, user)
-                messages.success(request, "Avatar updated successfully.")
-                return redirect("users:account")
+            profile.save()
+
+            update_session_auth_hash(request, user)
+            messages.success(request, "Settings updated successfully.")
+            return redirect("users:account")
+    else:
+        username_form = UsernameUpdateForm(instance=user)
+        profile_form = UpdateProfileForm(instance=user.profile)
 
     context = {"username_form": username_form, "profile_form": profile_form}
     return render(request, "users/account.html", context)

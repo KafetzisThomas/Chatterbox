@@ -18,32 +18,26 @@
         <h1 class="mb-4 text-center">Your Account Settings</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-
-                <div class="text-center mb-4 bg-white p-4 rounded shadow-sm">
-                    <div class="position-relative d-inline-block">
-                        {% if user.profile.avatar %}
-                            <img class="rounded-circle border border-secondary shadow-sm mb-2" src="data:image/png;base64,{{ user.profile.avatar|base64_encode }}" alt="{{ user.username }}'s avatar" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
-                        {% else %}
-                            <img class="rounded-circle border border-secondary shadow-sm mb-2" src="{% static 'default.png' %}" alt="{{ user.username }}'s avatar" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
-                        {% endif %}
+                <form method="POST" action="{% url 'users:account' %}" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm">
+                    {% csrf_token %}
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-block">
+                            {% if user.profile.avatar %}
+                                <img class="rounded-circle border border-secondary shadow-sm mb-2" src="data:image/png;base64,{{ user.profile.avatar|base64_encode }}" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                            {% else %}
+                                <img class="rounded-circle border border-secondary shadow-sm mb-2" src="{% static 'default.png' %}" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
 
-                <form action="{% url 'users:account' %}" method="POST" class="bg-white p-4 rounded shadow-sm">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="update_username">
                     {{ username_form|crispy }}
-                    <button type="submit" class="btn btn-primary w-100 mt-2">Update Username</button>
-                </form>
-
-                <form action="{% url 'users:account' %}" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm border-bottom pb-4">
-                    {% csrf_token %}
                     {{ profile_form|crispy }}
-                    <button type="submit" class="btn btn-primary w-100 mt-2">Update Avatar</button>
-                </form>
 
-                <h3 class="mb-4">Security Settings</h3>
-                <button type="button" class="btn btn-outline-danger w-100 mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete Account</button>                
+                    <div class="d-flex gap-2 w-100 mt-4">
+                        <button name="submit" class="btn btn-primary flex-fill me-2 mb-lg-0 mb-2"><i class="bi bi-floppy"></i> Save Changes</button>
+                        <a class="btn btn-danger flex-fill" data-bs-toggle="modal" data-bs-target="#delete_account_modal" role="button"><i class="bi bi-trash"></i> Delete Account</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -69,7 +63,7 @@
 {% endblock content %}
 
 {% block footer %}
-    <footer class="border-top border-dark mt-5">
+    <footer class="border-top border-dark mt-5 fixed-bottom">
         <p class="text-center text-body-dark mt-3">&copy; 2024 KafetzisThomas</p>
     </footer>
 {% endblock footer %}
