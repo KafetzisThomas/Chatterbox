@@ -21,7 +21,6 @@ dependencies = [
     "dj-database-url==3.1.2",
     "django==6.0.5",
     "django-crispy-forms==2.6",
-    "django-extensions==4.1",
     "hyperlink==21.0.0",
     "idna==3.18",
     "incremental==24.11.0",
@@ -41,4 +40,10 @@ dependencies = [
     "txaio==25.12.2",
     "typing-extensions==4.15.0",
     "zope-interface==8.4",
+]
+
+[dependency-groups]
+dev = [
+    "django-extensions>=4.1",
+    "pydotplus>=2.0.2",
 ]
