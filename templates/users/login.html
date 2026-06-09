@@ -5,31 +5,20 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="mb-4 text-center">Log in to Your Account</h1>
+        <h1 class="mb-4 text-center fw-semibold">Log in to Your Account</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <form method="POST" action="{% url 'users:login' %}" class="bg-light p-4 rounded shadow-sm">
+                <form method="POST" action="{% url 'users:login' %}" class="bg-body-tertiary p-4 rounded-4 shadow-sm">
+                    {% csrf_token %}
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-success">{{ message }}</div>
+                            <div class="alert alert-success border-0 rounded-3 text-center">{{ message }}</div>
                         {% endfor %}
                     {% endif %}
-
-                    {% csrf_token %}
                     {{ form|crispy }}
-
-                    <div class="text-center mt-3">
-                        <button name="submit" class="btn btn-success">Log in</button>
-                    </div>
-                    <input type="hidden" name="next" value="{% url 'chatterbox:chat_list' %}" />
+                    <button name="submit" class="btn btn-success rounded-3 w-100 mt-2">Log in</button>
                 </form>
             </div>
         </div>
     </div>
 {% endblock content %}
-
-{% block footer %}
-    <footer class="border-top border-dark mt-5 fixed-bottom">
-        <p class="text-center text-body-dark mt-3">&copy; 2024 KafetzisThomas</p>
-    </footer>
-{% endblock footer %}
