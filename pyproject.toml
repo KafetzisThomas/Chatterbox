@@ -1,7 +1,7 @@
 [project]
 name = "chatterbox"
 version = "0.1.0"
-description = "Enables real-time chat conversations among users."
+description = "Enables real time chat conversations among users."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,6 +10,7 @@ dependencies = [
     "attrs==26.1.0",
     "autobahn==25.12.2",
     "automat==25.4.16",
+    "boto3>=1.43.26",
     "brotli==1.2.0",
     "cffi==2.0.0",
     "channels==4.3.2",
@@ -21,6 +22,7 @@ dependencies = [
     "dj-database-url==3.1.2",
     "django==6.0.5",
     "django-crispy-forms==2.6",
+    "django-storages>=1.14.6",
     "hyperlink==21.0.0",
     "idna==3.18",
     "incremental==24.11.0",

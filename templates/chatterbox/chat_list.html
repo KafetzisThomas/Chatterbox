@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load base64_encode %}
 {% load static %}
 
 {% block title %}Chats{% endblock title %}
@@ -26,7 +25,7 @@
                                         <li class="p-3 border-bottom rounded-3">
                                             <a href="{% url 'chatterbox:chat' username=request.user.username other_username=other_user.username %}" class="d-flex align-items-center text-decoration-none text-dark">
                                                 {% if other_user.profile.avatar %}
-                                                    <img src="data:image/png;base64,{{ other_user.profile.avatar|base64_encode }}" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;"/>
+                                                    <img src="{{ other_user.profile.avatar.url }}" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;"/>
                                                 {% else %}
                                                     <img src="{% static 'default.png' %}" class="rounded-circle me-3" width="60"/>
                                                 {% endif %}

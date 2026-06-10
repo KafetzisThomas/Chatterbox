@@ -76,7 +76,7 @@
                         <!-- message input area, stays at the bottom -->
                         <div class="d-flex align-items-center mt-3 p-2 chat-input-bar">
                             {% if current_user.profile.avatar %}
-                                <img src="data:image/png;base64,{{ current_user.profile.avatar|base64_encode }}" id="avatar" alt="avatar" class="rounded-circle border"/>
+                                <img src="{{ current_user.profile.avatar.url }}" id="avatar" alt="avatar" class="rounded-circle border"/>
                             {% else %}
                                 <img src="{% static 'default.png' %}" id="avatar" alt="avatar" class="rounded-circle border"/>
                             {% endif %}

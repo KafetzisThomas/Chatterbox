@@ -16,9 +16,7 @@ class UsernameUpdateForm(forms.ModelForm):
         fields = ("username",)
 
 
-class UpdateProfileForm(forms.ModelForm):
-    avatar = forms.ImageField(required=False)
-
+class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = []
+        fields = ['avatar']
