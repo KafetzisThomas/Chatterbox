@@ -15,10 +15,7 @@
                 <div class="card border-0 rounded-4 shadow" style="height: 600px;">
                     <div class="card-body d-flex flex-column" style="height: 100%;">
                         <div class="d-flex justify-content-end mb-3">
-                            <form action="{% url 'chatterbox:delete_chat' username=current_user other_username=other_user %}" method="POST">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-3"><i class="bi bi-trash"></i></button>
-                            </form>
+                            <button type="button" class="btn btn-outline-danger rounded-3" data-bs-toggle="modal" data-bs-target="#deleteChatModal"><i class="bi bi-trash"></i></button>
                         </div>
 
                         <div id="messages-container" class="pt-3 pe-3 messages-container flex-grow-1 overflow-auto">
@@ -89,6 +86,24 @@
                             <button id="message_send_button" class="btn btn-primary rounded-3 ms-2"><i class="bi bi-send"></i></button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteChatModal" tabindex="-1" aria-labelledby="deleteChatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="deleteChatModalLabel">Delete Chat?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <form action="{% url 'chatterbox:delete_chat' username=current_user other_username=other_user %}" method="post" class="d-flex gap-2 w-100">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-secondary rounded-3 flex-fill" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger rounded-3 flex-fill">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
