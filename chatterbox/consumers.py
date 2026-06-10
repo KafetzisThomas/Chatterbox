@@ -1,5 +1,4 @@
 import json
-import base64
 from django.contrib.auth.models import User
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
@@ -29,28 +28,27 @@ class Chat(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data.get("message", "")
-        image_data = data.get("image", "")
+        image_name = data.get("image_name", "")
+        image_url = data.get("image_url", "")
         username = data["username"]
         user = await self.get_user(username)
 
-        image = base64.b64decode(image_data) if image_data else None
-
-        await self.save_message(self.chat, user, message, image)
+        await self.save_message(self.chat, user, message, image_name)
 
         # display message to websocket group
         await self.channel_layer.group_send(self.room_group_name, {
             "type": "send_message",
             "username": username,
             "message": message,
-            "image": image_data
+            "image_url": image_url
         })
 
     async def send_message(self, event):
         message = event["message"]
         username = event["username"]
-        image = event["image"]
+        image_url = event["image_url"]
         await self.send(
-            text_data=json.dumps({"username": username, "message": message, "image": image})
+            text_data=json.dumps({"username": username, "message": message, "image_url": image_url})
         )
 
     @database_sync_to_async
@@ -69,8 +67,8 @@ class Chat(AsyncWebsocketConsumer):
         return chat
 
     @database_sync_to_async
-    def save_message(self, chat, user, message, image):
-        Message.objects.create(chat=chat, user=user, content=message, image=image)
+    def save_message(self, chat, user, message, image_name):
+        Message.objects.create(chat=chat, user=user, content=message, image=image_name)
 
     def create_group_name(self, username1, username2):
         return f"{username1}_{username2}" if username1 < username2 else f"{username2}_{username1}"

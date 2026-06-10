@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-{% load base64_encode %}
 {% load convert_to_link %}
 {% load update_bg_color %}
 
@@ -33,7 +32,7 @@
                                                 </p>
                                             {% endif %}
                                             {% if message.image %}
-                                                <img src="data:image/png;base64,{{ message.image|base64_encode }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
+                                                <img src="{{ message.image.url }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
                                             <p class="small mb-0 rounded-3 text-muted text-end">{{ message.timestamp|date:"h:i A" }}</p>
                                         </div>
@@ -62,7 +61,7 @@
                                                 </p>
                                             {% endif %}
                                             {% if message.image %}
-                                                <img src="data:image/png;base64,{{ message.image|base64_encode }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
+                                                <img src="{{ message.image.url }}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>
                                             {% endif %}
                                             <p class="small mb-0 rounded-3 text-muted">{{ message.timestamp|date:"h:i A" }}</p>
                                         </div>
@@ -109,6 +108,7 @@
         </div>
     </div>
 
+    {% csrf_token %}
     <input type="hidden" id="username" value="{{ user.username }}">
     <input type="hidden" id="otherUsername" value="{{ other_user.username }}">
 

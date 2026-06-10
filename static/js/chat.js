@@ -63,7 +63,7 @@ function handleIncomingMessage(e) {
     const div = document.createElement("div");
     const messageContent = convertLinks(data.message);
     const bgColor = data.message && data.message.includes('@') ? 'bg-warning' : '';
-    const imageContent = data.image ? `<img src="data:image/png;base64,${data.image}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>` : '';
+    const imageContent = data.image_url ? `<img src="${data.image_url}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>` : '';
     div.classList.add("fade-in");
 
     // Use current time for HH:MM

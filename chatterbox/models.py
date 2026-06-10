@@ -1,6 +1,16 @@
+import os
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta, timezone
+
+def chat_image_path(instance, filename):
+    """
+    Store chat images with UUID filenames to avoid collisions.
+    """
+    file_extension = os.path.splitext(filename)[1]
+    unique_filename = f"{uuid.uuid4()}{file_extension}"
+    return f"chat_images/{unique_filename}"
 
 
 class PrivateChat(models.Model):
@@ -13,7 +23,7 @@ class PrivateChat(models.Model):
 
 class Message(models.Model):
     content = models.TextField(blank=True)
-    image = models.BinaryField(blank=True, null=True)
+    image = models.ImageField(upload_to=chat_image_path, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     chat = models.ForeignKey(PrivateChat, on_delete=models.CASCADE, related_name="messages")
     user = models.ForeignKey(User, on_delete=models.CASCADE)

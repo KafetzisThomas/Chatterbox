@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect, JsonResponse
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import PrivateChat, Message
 from .forms import PrivateChatForm
@@ -80,6 +81,17 @@ def chat(request, username, other_username):
     return render(request, "chatterbox/chat.html", context)
 
 @login_required
+@require_POST
+def upload_image(request, username, other_username):
+    image = request.FILES.get("image")
+    if not image:
+        return JsonResponse({"error": "No image provided."}, status=400)
+
+    message = Message(user=request.user, chat_id=0)
+    message.image.save(image.name, image, save=False)
+    return JsonResponse({"image_name": message.image.name, "image_url": message.image.url})
+
+@login_required
 def delete_chat(request, username, other_username):
     try:
         user1 = User.objects.get(username=username)
@@ -102,6 +114,7 @@ def delete_chat(request, username, other_username):
     return redirect("chatterbox:chat_list")
 
 @login_required
+@require_POST
 def delete_message(request, message_id):
     message = get_object_or_404(Message, id=message_id)
     message.delete()
