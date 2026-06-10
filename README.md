@@ -3,7 +3,7 @@
     <p><strong>Chatterbox: </strong>Enables real time chat conversations among users.<br>Written in Python/Django</p>
 </div>
 
-> [!NOTICE]
+> [!NOTE]
 > During development and deployment I encountered **CSRF verification errors** and documented the issue and fix in a forum post.
 > This may help others facing similar production issues:
 > <https://forum.djangoproject.com/t/forbidden-403-csrf-verification-failed-request-aborted-error-encountered-in-production/34354>
