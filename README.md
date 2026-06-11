@@ -1,6 +1,6 @@
 <div align="center">
     <img src="static/favicon.png" width="150"/><br>
-    <p><strong>Chatterbox: </strong>Enables real time chat conversations among users.<br>Written in Python/Django</p>
+    <p><strong>Chatbox: </strong>Enables real time chat conversations among users.<br>Written in Python/Django</p>
 </div>
 
 > [!NOTE]
@@ -68,4 +68,4 @@ uv run manage.py test
 - Report bugs via GitHub Issues.
 - Submit pull requests via GitHub Pull Requests.
 
-Thank you for supporting Chatterbox!
+Thank you for supporting Chatbox!

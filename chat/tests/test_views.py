@@ -21,7 +21,7 @@ class ChatListViewTests(TestCase):
         Message.objects.create(chat=self.chat1, user=self.user1, content="Hello!")
         Message.objects.create(chat=self.chat2, user=self.user3, content="Hey there!")
 
-        self.url = reverse("chatterbox:chat_list")
+        self.url = reverse("chat:chat_list")
 
     def test_unauthenticated_user_redirects_to_login(self):
         self.client.logout()
@@ -45,7 +45,7 @@ class CreateChatViewTests(TestCase):
         self.user3 = User.objects.create_user(username="user3", password="Str0ng_p@ssword")
         self.client.login(username="user1", password="Str0ng_p@ssword")
 
-        self.url = reverse("chatterbox:create_chat")
+        self.url = reverse("chat:create_chat")
     
     def test_unauthenticated_user_redirects_to_login(self):
         self.client.logout()
@@ -60,7 +60,7 @@ class CreateChatViewTests(TestCase):
         chat = PrivateChat.objects.get(user1=self.user1, user2=self.user2)
         self.assertIsNotNone(chat)  # chat created/fetched
 
-        expected_url = reverse("chatterbox:chat", args=["user1", "user2"])
+        expected_url = reverse("chat:chat", args=["user1", "user2"])
         self.assertRedirects(response, expected_url)
 
     def test_create_chat_self_chat(self):
@@ -102,8 +102,8 @@ class ChatViewTests(TestCase):
         self.message1 = Message.objects.create(chat=self.chat1, user=self.user1, content="Hello!")
         self.message2 = Message.objects.create(chat=self.chat1, user=self.user2, content="Hi!")
 
-        self.chat_url = reverse("chatterbox:chat", args=[self.user1.username, self.user2.username])
-        self.chat_list_url = reverse("chatterbox:chat_list")
+        self.chat_url = reverse("chat:chat", args=[self.user1.username, self.user2.username])
+        self.chat_list_url = reverse("chat:chat_list")
 
     def test_unauthenticated_user_redirects_to_login(self):
         self.client.logout()
@@ -116,7 +116,7 @@ class ChatViewTests(TestCase):
         self.assertRedirects(response, self.chat_list_url)
 
     def test_chat_view_redirects_if_same_user_in_url(self):
-        url = reverse("chatterbox:chat", args=[self.user1.username, self.user1.username])
+        url = reverse("chat:chat", args=[self.user1.username, self.user1.username])
         response = self.client.get(url)
         self.assertRedirects(response, self.chat_list_url)
 
@@ -128,7 +128,7 @@ class UploadImageViewTests(TestCase):
         self.user2 = User.objects.create_user(username="user2", password="Str0ng_p@ssword")
         self.client.login(username="user1", password="Str0ng_p@ssword")
 
-        self.url = reverse("chatterbox:upload_image", args=[self.user1.username, self.user2.username])
+        self.url = reverse("chat:upload_image", args=[self.user1.username, self.user2.username])
 
     def test_upload_image_no_file(self):
         response = self.client.post(self.url)
@@ -161,7 +161,7 @@ class DeleteChatViewTests(TestCase):
         self.message1 = Message.objects.create(chat=self.chat1, user=self.user1, content="Hello!")
         self.message2 = Message.objects.create(chat=self.chat1, user=self.user2, content="Hi!")
 
-        self.url = reverse("chatterbox:delete_chat", kwargs={
+        self.url = reverse("chat:delete_chat", kwargs={
             "username": self.user1.username, "other_username": self.user2.username},
         )
 
@@ -172,7 +172,7 @@ class DeleteChatViewTests(TestCase):
 
     def test_delete_chat_success(self):
         response = self.client.post(self.url)
-        self.assertRedirects(response, reverse("chatterbox:chat_list"))
+        self.assertRedirects(response, reverse("chat:chat_list"))
         self.assertFalse(PrivateChat.objects.filter(id=self.chat1.id).exists())
         self.assertFalse(Message.objects.filter(id=self.message1.id).exists())
         self.assertFalse(Message.objects.filter(id=self.message2.id).exists())
@@ -195,7 +195,7 @@ class DeleteMessageViewTests(TestCase):
         self.message1 = Message.objects.create(chat=self.chat, user=self.user1, content="Hello")
         self.message2 = Message.objects.create(chat=self.chat, user=self.user2, content="Hi")
 
-        self.url = reverse("chatterbox:delete_message", args=[self.message1.id])
+        self.url = reverse("chat:delete_message", args=[self.message1.id])
 
     def test_unauthenticated_user_redirects_to_login(self):
         self.client.logout()
@@ -208,11 +208,11 @@ class DeleteMessageViewTests(TestCase):
         self.assertFalse(Message.objects.filter(id=self.message1.id).exists())
 
     def test_delete_message_forbidden_for_other_user(self):
-        url = reverse("chatterbox:delete_message", args=[self.message2.id])
+        url = reverse("chat:delete_message", args=[self.message2.id])
         response = self.client.post(url)
         self.assertEqual(response.status_code, 403)
         self.assertTrue(Message.objects.filter(id=self.message2.id).exists())
 
     def test_delete_message_not_exist(self):
-        response = self.client.post(reverse("chatterbox:delete_message", args=[9999]))
+        response = self.client.post(reverse("chat:delete_message", args=[9999]))
         self.assertEqual(response.status_code, 404)

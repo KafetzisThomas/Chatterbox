@@ -41,7 +41,7 @@
                                             <button class="btn btn-sm btn-outline-secondary rounded-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <form action="{% url 'chatterbox:delete_message' message.id %}" method="POST">
+                                                    <form action="{% url 'chat:delete_message' message.id %}" method="POST">
                                                         {% csrf_token %}
                                                         <button type="submit" class="dropdown-item text-danger">
                                                             <i class="bi bi-x-circle"></i> Delete message
@@ -98,7 +98,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-footer">
-                    <form action="{% url 'chatterbox:delete_chat' username=current_user other_username=other_user %}" method="post" class="d-flex gap-2 w-100">
+                    <form action="{% url 'chat:delete_chat' username=current_user other_username=other_user %}" method="post" class="d-flex gap-2 w-100">
                         {% csrf_token %}
                         <button type="button" class="btn btn-secondary rounded-3 flex-fill" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-danger rounded-3 flex-fill">Delete</button>

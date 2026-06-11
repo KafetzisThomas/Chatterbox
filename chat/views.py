@@ -20,7 +20,7 @@ def chat_list(request):
         chats_with_last_messages.append((other_user, last_message, time_diff))
 
     context = {"chats_with_last_messages": chats_with_last_messages}
-    return render(request, "chatterbox/chat_list.html", context)
+    return render(request, "chat/chat_list.html", context)
 
 @login_required
 def create_chat(request):
@@ -32,11 +32,11 @@ def create_chat(request):
 
             if not other_user:
                 messages.error(request, "Username doesn't exist.")
-                return redirect("chatterbox:create_chat")
+                return redirect("chat:create_chat")
 
             if other_user == request.user:
                 messages.success(request, "You can't start a chat with yourself.")
-                return redirect("chatterbox:create_chat")
+                return redirect("chat:create_chat")
 
             # fetch/create chat
             if request.user.id < other_user.id:
@@ -44,12 +44,12 @@ def create_chat(request):
             else:
                 PrivateChat.objects.get_or_create(user1=other_user, user2=request.user)
 
-            return HttpResponseRedirect(reverse("chatterbox:chat", args=[request.user.username, other_user.username]))
+            return HttpResponseRedirect(reverse("chat:chat", args=[request.user.username, other_user.username]))
 
     else:
         form = PrivateChatForm()
 
-    return render(request, "chatterbox/create_chat.html", {"form": form})
+    return render(request, "chat/create_chat.html", {"form": form})
 
 @login_required
 def chat(request, username, other_username):
@@ -57,7 +57,7 @@ def chat(request, username, other_username):
     user2 = get_object_or_404(User, username=other_username)
 
     if user1 == user2:
-        return redirect("chatterbox:chat_list")
+        return redirect("chat:chat_list")
 
     if request.user == user1:
         # fetch/create chat
@@ -66,7 +66,7 @@ def chat(request, username, other_username):
         else:
             chat, _ = PrivateChat.objects.get_or_create(user1=user2, user2=user1)
     else:
-        return redirect("chatterbox:chat_list")
+        return redirect("chat:chat_list")
 
     messages = Message.objects.filter(chat=chat).order_by("timestamp")
 
@@ -78,7 +78,7 @@ def chat(request, username, other_username):
         prev = message
 
     context = {"messages_with_prev": messages_with_prev, "current_user": user1, "other_user": user2}
-    return render(request, "chatterbox/chat.html", context)
+    return render(request, "chat/chat.html", context)
 
 @login_required
 @require_POST
@@ -99,7 +99,7 @@ def delete_chat(request, username, other_username):
 
         if request.user != user1 and request.user != user2:
             messages.error(request, "Not authorized to delete this chat.")
-            return redirect("chatterbox:chat_list")
+            return redirect("chat:chat_list")
 
         if user1.id < user2.id:
             chat = PrivateChat.objects.get(user1=user1, user2=user2)
@@ -115,7 +115,7 @@ def delete_chat(request, username, other_username):
     except Exception:
         messages.error(request, "An unexpected error occurred.")
 
-    return redirect("chatterbox:chat_list")
+    return redirect("chat:chat_list")
 
 @login_required
 @require_POST
@@ -128,4 +128,4 @@ def delete_message(request, message_id):
     other_user = chat.user2 if chat.user1 == request.user else chat.user1
     message.delete()
 
-    return redirect("chatterbox:chat", username=request.user.username, other_username=other_user.username)
+    return redirect("chat:chat", username=request.user.username, other_username=other_user.username)

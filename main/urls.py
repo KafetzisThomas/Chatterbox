@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("user/", include("users.urls")),
-    path("", include("chatterbox.urls")),
+    path("", include("chat.urls")),
 ]
 
 # serve files directly from disk, use s3 for prod

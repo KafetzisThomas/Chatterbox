@@ -1,5 +1,5 @@
 [project]
-name = "chatterbox"
+name = "chatbox"
 version = "0.1.0"
 description = "Enables real time chat conversations among users."
 readme = "README.md"

@@ -37,7 +37,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://127.0.0.1").sp
 
 INSTALLED_APPS = [
     # my apps
-    "chatterbox",
+    "chat",
     "users",
     # third party apps
     "django_extensions",
@@ -192,5 +192,5 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = "users:login"
-LOGIN_REDIRECT_URL = "chatterbox:chat_list"
+LOGIN_REDIRECT_URL = "chat:chat_list"
 LOGOUT_REDIRECT_URL = "/"

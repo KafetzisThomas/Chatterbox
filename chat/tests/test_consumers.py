@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from channels.auth import AuthMiddlewareStack
 from channels.testing import WebsocketCommunicator
 from channels.db import database_sync_to_async
-import chatterbox.routing
+import chat.routing
 from ..consumers import Chat
 from ..models import PrivateChat, Message
 
@@ -17,7 +17,7 @@ application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
         "websocket": AuthMiddlewareStack(
-            URLRouter(chatterbox.routing.websocket_urlpatterns)
+            URLRouter(chat.routing.websocket_urlpatterns)
         ),
     }
 )

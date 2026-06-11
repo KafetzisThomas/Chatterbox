@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('content', models.TextField()),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('chat', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='messages', to='chatterbox.privatechat')),
+                ('chat', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='messages', to='chat.privatechat')),
             ],
         ),
     ]
