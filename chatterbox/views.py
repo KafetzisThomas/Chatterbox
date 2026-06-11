@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponseForbidden, JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -117,9 +117,11 @@ def delete_chat(request, username, other_username):
 @require_POST
 def delete_message(request, message_id):
     message = get_object_or_404(Message, id=message_id)
-    message.delete()
+    if message.user != request.user:
+        return HttpResponseForbidden("Not allowed to delete this message.")
 
     chat = message.chat
     other_user = chat.user2 if chat.user1 == request.user else chat.user1
+    message.delete()
 
     return redirect("chatterbox:chat", username=request.user.username, other_username=other_user.username)
