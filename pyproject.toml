@@ -1,7 +1,7 @@
 [project]
 name = "chatbox"
 version = "0.1.0"
-description = "Enables real time chat conversations among users."
+description = "Exchange messages between users."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

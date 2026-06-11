@@ -1,6 +1,6 @@
 <div align="center">
     <img src="static/favicon.png" width="150"/><br>
-    <p><strong>Chatbox: </strong>Enables real time chat conversations among users.<br>Written in Python/Django</p>
+    <p><strong>Chatbox: </strong>Exchange messages between users.<br>Written in Python/Django</p>
 </div>
 
 > [!NOTE]
