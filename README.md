@@ -1,70 +1,43 @@
-<p align="center">
-    <img src="chatterbox/static/favicon.png" width="200" alt="Logo Icon"/><br>
-    Enables real-time chat conversations among users.<br>
-    Written in Python/Django
-</p>
+<div align="center">
+    <img src="static/favicon.png" width="150"/><br>
+    <p><strong>Chatterbox: </strong>Enables real time chat conversations among users.<br>Written in Python/Django</p>
+</div>
+
+> [!NOTE]
+> During development and deployment I encountered **CSRF verification errors** and documented the issue and fix in a forum post.
+> This may help others facing similar production issues:
+> <https://forum.djangoproject.com/t/forbidden-403-csrf-verification-failed-request-aborted-error-encountered-in-production/34354>
 
 ## Features
 
-- [X] View and modify your profile details, including your avatar, username and password.
-- [X] Create private 1-on-1 conversations with other users.
-- [X] Users can send `text` and `images`
-- [X] Allow users to delete entire conversations
-- [X] Remove individual messages in conversations
-- [x] Detect links and add an anchor tag to them
-- [X] Receive email notifications for mentions
+- [X] Private 1 on 1 conversations with other users
+- [X] Send `links` and `images` with low latency
+- [X] Delete individual messages or entire conversations
 
-## Notice
+## Database Schema
 
-During the development and deployment of this project I faced several challenges, particularly with **CSRF verification errors**. These issues led me to create a Django forum post where I detailed the problem and finally the solution I found. I hope this resource proves helpful for others encountering similar deployment issues:
+![Database Schema](/assets/db_schema.png)
 
-<https://forum.djangoproject.com/t/forbidden-403-csrf-verification-failed-request-aborted-error-encountered-in-production/34354>
+## Usage
 
-If you find this project interesting, helpful or inspiring, please consider giving it a `star` or `following` to support further development and improvements.
+### Local Development
 
-## Django Models
-
-![Django Models Graph](https://github.com/user-attachments/assets/3e8d8f5a-7d23-496d-bf96-b6606ea045cc)
-
-## Setup for Local Development
-
-### Install uv
+First install `uv` and sync the project dependencies:
 
 ```bash
 cd path/to/root/directory
 pip install uv
+uv sync
+uv sync --extra dev  # for devs only
 ```
 
-### Create Enviroment Variable file
-
-```bash
-touch main/.env
-nano main/.env
-```
-
-Add the following (adjust as needed):
-
-```ini
-# Django settings
-SECRET_KEY="example_secret_key"  # https://stackoverflow.com/a/57678930
-ALLOWED_HOSTS="localhost,127.0.0.1"
-CSRF_TRUSTED_ORIGINS="http://localhost:8001"
-DEBUG=True  # For development
-
-# OPTIONAL: Email settings for mention notifications
-EMAIL_HOST_USER="example_email_host"
-EMAIL_HOST_PASSWORD="example_email_password"
-```
-
-Save changes and close the file.
-
-### Migrate Database
+Migrate database:
 
 ```bash
 uv run manage.py migrate
 ```
 
-### Run Django Server
+Run Django server:
 
 ```bash
 uv run manage.py runserver

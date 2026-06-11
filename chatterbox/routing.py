@@ -1,9 +1,6 @@
 from django.urls import re_path
-from .consumers import ChatConsumer
+from .consumers import Chat
 
-# WebSocket URL pattern with both usernames
 websocket_urlpatterns = [
-    re_path(
-        r"^ws/chat/(?P<username>\w+)/(?P<other_username>\w+)/$", ChatConsumer.as_asgi()
-    ),
+    re_path(r"^ws/chat/(?P<username>\w+)/(?P<other_username>\w+)/$", Chat.as_asgi()),
 ]

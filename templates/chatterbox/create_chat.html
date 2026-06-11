@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Chat{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mb-4 text-center fw-semibold">Create Chat</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form method="POST" action="{% url 'chatterbox:create_chat' %}" class="bg-body-tertiary p-4 rounded-4 shadow-sm">
+                    {% csrf_token %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger border-0 rounded-3 text-center">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary rounded-3 w-100 mt-2">Create Chat</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

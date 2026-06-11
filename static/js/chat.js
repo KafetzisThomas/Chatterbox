@@ -1,4 +1,3 @@
-// Import utils and file upload functions
 import { convertLinks, autoScrollMessages } from './utils.js';
 import { sendImage } from './file_upload.js';
 
@@ -23,7 +22,6 @@ function setupWebSocketConnection() {
 
     chatSocket.onmessage = handleIncomingMessage;
 
-    // Attach send message and image handlers
     document.querySelector("#message_send_button").onclick = function (e) {
         sendMessage(chatSocket);
     };
@@ -63,10 +61,9 @@ function handleIncomingMessage(e) {
     const div = document.createElement("div");
     const messageContent = convertLinks(data.message);
     const bgColor = data.message && data.message.includes('@') ? 'bg-warning' : '';
-    const imageContent = data.image ? `<img src="data:image/png;base64,${data.image}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>` : '';
+    const imageContent = data.image_url ? `<img src="${data.image_url}" class="img-fluid rounded mb-1" style="max-width: 200px;"/>` : '';
     div.classList.add("fade-in");
 
-    // Use current time for HH:MM
     const now = new Date();
     const timeString = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'UTC' });
 

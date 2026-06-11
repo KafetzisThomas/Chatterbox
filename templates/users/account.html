@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Account{% endblock title %}
+
+{% block content %}
+    <div class="container mb-4">
+        <h1 class="mb-4 text-center fw-semibold">Your Account Settings</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form method="POST" action="{% url 'users:account' %}" enctype="multipart/form-data" class="bg-body-tertiary p-4 rounded-4 shadow-sm">
+                    {% csrf_token %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success border-0 rounded-3 text-center">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-block">
+                            {% if user.profile.avatar %}
+                                <img class="rounded-circle border border-2 shadow-sm mb-2" src="{{ user.profile.avatar.url }}" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                            {% else %}
+                                <img class="rounded-circle border border-2 shadow-sm mb-2" src="{% static 'default.png' %}" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"/>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {{ username_form|crispy }}
+                    {{ profile_form|crispy }}
+
+                    <div class="d-flex gap-2 w-100 mt-4">
+                        <button name="submit" class="btn btn-primary rounded-3 flex-fill">Save Changes</button>
+                        <a class="btn btn-danger rounded-3 flex-fill" data-bs-toggle="modal" data-bs-target="#deleteAccountModal" role="button">Delete Account</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="deleteAccountModalLabel">Delete Account?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">Deleting your account is permanent. It cannot be undone.</div>
+                <div class="modal-footer">
+                    <form action="{% url 'users:delete_account' %}" method="post" class="d-flex gap-2 w-100">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-secondary rounded-3 flex-fill" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger rounded-3 flex-fill">Delete Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

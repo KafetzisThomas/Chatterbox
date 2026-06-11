@@ -1,26 +1,15 @@
-body {
-  background-color: #adbdcd;
-}
-
-/* Navigation link styles */
 .nav-link {
   color: #808080;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-/* Hover state styles for navigation links */
 .nav-link:hover {
   color: #fff;
 }
 
-/* Active state styles for navigation links */
 .nav-link.active {
   color: #fff;
-}
-
-#chat {
-  border-radius: 15px;
 }
 
 #chat .form-control {
@@ -33,35 +22,42 @@ body {
 }
 
 #avatar {
-  width: 45px;
-  height: 45px;
+  width: 42px;
+  height: 42px;
 }
 
-/* Add scrolling to profile container */
 .profile-container {
   max-height: 550px;
   overflow-y: auto;
 }
 
-/* Fixed height for message container */
 .messages-container {
   overflow-y: auto;
   height: calc(100% - 60px);
-  max-height: calc(100% - 60px);  /* Ensure max height also respects the input area */
+  max-height: calc(100% - 60px);
 }
 
-/* Keyframes for fade-in animation */
+.chat-input-bar {
+  background: #f7f9fb;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.chat-input-bar .form-control {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
 }
 
-/* Fade-in animation styles */
 .fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
