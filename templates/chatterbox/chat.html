@@ -8,10 +8,10 @@
 {% block title %}{{ other_user.username }}{% endblock title %}
 
 {% block content %}
-    <div class="container">
+    <div class="container-fluid px-1">
         <div class="row">
-            <div class="col-md-12">
-                <div class="card border-0 rounded-4 shadow" style="height: 600px;">
+            <div class="col-12">
+                <div class="card border-0 rounded-4 shadow" style="height: calc(100vh - 200px); min-height: 500px;">
                     <div class="card-body d-flex flex-column" style="height: 100%;">
                         <div class="d-flex justify-content-end mb-3">
                             <button type="button" class="btn btn-outline-danger rounded-3" data-bs-toggle="modal" data-bs-target="#deleteChatModal"><i class="bi bi-trash"></i></button>
