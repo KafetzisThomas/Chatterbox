@@ -50,7 +50,7 @@ class AccountViewTests(TestCase):
         byte_arr.seek(0)
         avatar = SimpleUploadedFile("test_avatar.png", byte_arr.read(), content_type="image/png")
         valid_data = {"username": "user", "avatar": avatar}
-        response = self.client.post(self.url, data=valid_data, follow=True)
+        self.client.post(self.url, data=valid_data, follow=True)
 
         self.user.refresh_from_db()
         self.profile.refresh_from_db()

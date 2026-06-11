@@ -97,6 +97,10 @@ def delete_chat(request, username, other_username):
         user1 = User.objects.get(username=username)
         user2 = User.objects.get(username=other_username)
 
+        if request.user != user1 and request.user != user2:
+            messages.error(request, "Not authorized to delete this chat.")
+            return redirect("chatterbox:chat_list")
+
         if user1.id < user2.id:
             chat = PrivateChat.objects.get(user1=user1, user2=user2)
         else:
