@@ -51,9 +51,11 @@ Access web application at `http://127.0.0.1:8000` or `http://localhost:8000`.
 uv run manage.py test
 ```
 
-## Demo Image
+## Demo Images
 
-![Screenshot 2025-07-23 121108](https://github.com/user-attachments/assets/425d0fd7-93d7-48c9-8c3b-5f2f631ee74f)
+![demo1](/assets/demo1.png)
+
+![demo2](/assets/demo2.png)
 
 ## Contributing Guidelines
 
