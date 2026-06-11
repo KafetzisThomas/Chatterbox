@@ -40,9 +40,9 @@ def create_chat(request):
 
             # fetch/create chat
             if request.user.id < other_user.id:
-                chat, _ = PrivateChat.objects.get_or_create(user1=request.user, user2=other_user)
+                PrivateChat.objects.get_or_create(user1=request.user, user2=other_user)
             else:
-                chat, _ = PrivateChat.objects.get_or_create(user1=other_user, user2=request.user)
+                PrivateChat.objects.get_or_create(user1=other_user, user2=request.user)
 
             return HttpResponseRedirect(reverse("chatterbox:chat", args=[request.user.username, other_user.username]))
 
@@ -106,7 +106,7 @@ def delete_chat(request, username, other_username):
         else:
             chat = PrivateChat.objects.get(user1=user2, user2=user1)
         chat.delete()
-        messages.success(request, "Chat has been successfully deleted!")
+        messages.success(request, "Chat has been successfully deleted.")
 
     except User.DoesNotExist:
         messages.error(request, "One or both users do not exist.")

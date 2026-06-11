@@ -43,5 +43,5 @@ def account(request):
 def delete_account(request):
     user = request.user
     user.delete()
-    messages.error(request, "Your account has been successfully deleted!")
+    messages.error(request, "Account has been successfully deleted.")
     return redirect("users:register")
